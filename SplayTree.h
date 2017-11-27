@@ -1,6 +1,3 @@
-//
-// Created by Nevo Agmon on 27/11/2017.
-//
 
 #ifndef EX1_SPLAYTREE_H
 #define EX1_SPLAYTREE_H

@@ -10,14 +10,15 @@ class Trainer {
 
 public:
 
-    Trainer();
+    Trainer(TrainerID);
     ~Trainer();
+    void AddGladiator(Gladiator&);
 
 private:
 
     TrainerID id;
     Gladiator bestGladiator;
-    SplayTree gladiators;
+    SplayTree* gladiators;
 
 };
 

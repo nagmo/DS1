@@ -5,7 +5,9 @@
 #include "utility.h"
 #include "SplayTree.h"
 #include "Gladiator.h"
+#include "Trainer.h"
 
+using std::exception;
 class ComodosDS {
 
 public:
@@ -23,10 +25,10 @@ public:
 
 private:
 
-    SplayTree trainers;
-    SplayTree gladiators;
-    SplayTree levels;
-    Gladiator bestGladiator;
+    SplayTree<Trainer> trainers;
+    SplayTree<Gladiator> gladiators;
+    SplayTree<Level> levels;
+    Gladiator* bestGladiator;
 };
 
 
