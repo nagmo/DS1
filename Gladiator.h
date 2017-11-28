@@ -1,6 +1,3 @@
-//
-// Created by Nevo Agmon on 27/11/2017.
-//
 
 #ifndef EX1_GLADIATOR_H
 #define EX1_GLADIATOR_H
@@ -16,10 +13,28 @@ public:
     Gladiator(const Gladiator&);
     Level GetLevel();
     TrainerID GetTrainerID();
+    /**
+     * increase the level by levelIncrease
+     */
     void IncreaseLevel(LevelIncrease);
-    bool operator==(Gladiator&);
-    bool operator<(Gladiator&);
-    bool operator>(Gladiator&);
+    /**
+     * two gladiators are equal if have the same id
+     * @param gladiator
+     * @return
+     */
+    bool operator==(Gladiator& gladiator);
+    /**
+     * compare by id
+     * @param gladiator
+     * @return
+     */
+    bool operator<(Gladiator& gladiator);
+    /**
+     * compare by id
+     * @param gladiator
+     * @return
+     */
+    bool operator>(Gladiator& gladiator);
 
 private:
 

@@ -61,8 +61,6 @@ void ComodosDS:: BuyGladiator(GladiatorID gladID, TrainerID trainID, Level level
     //find the trainer
     //if doesnt exist, would throw FailureException
     Trainer currTrainer = trainers.Find(tempTrainer);
-    //delete tempTrainer
-    delete  tempTrainer;
     //add glad to currTrainer
     //update bestGlad of the trainer inside this function
     currTrainer.AddGladiator(newGlad);
@@ -166,7 +164,9 @@ void ComodosDS::RemoveGladiatorFromLevelsTree(Level level){
         levels.Delete(currLevel);
     }
 }
-
+/**
+ * increse numOfGlads in the suitable level
+ */
 void ComodosDS::AddGladiatorToLevelsTree(Level level){
     //create an instant of levelNode
     LevelsNode tempNode = LevelsNode(level);
