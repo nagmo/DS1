@@ -16,6 +16,18 @@ struct GladByLevel{
     int* gladiators;
 };
 
+class LevelsNode{
+public:
+    LevelsNode(Level);
+    int GetNumOfGladiators();
+    void IncNumOfGladiators();
+    void DecNumOfGladiators();
+    void ResetNumOfGladiators();
+private:
+    Level level;
+    int numOfGladiators;
+};
+
 using std::exception;
 
 class InvalidInputException : exception{};

@@ -12,13 +12,16 @@ public:
 
     Trainer(TrainerID);
     ~Trainer();
+    //remeber to update the bestGlad of a trainer
     void AddGladiator(Gladiator&);
+    Gladiator& GetBestGladiator();
+    SplayTree<Gladiator>& GetGladiatorsTree();
 
 private:
 
     TrainerID id;
     Gladiator bestGladiator;
-    SplayTree* gladiators;
+    SplayTree<Gladiator> gladiators;
 
 };
 

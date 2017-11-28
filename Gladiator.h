@@ -11,13 +11,15 @@ class Gladiator {
 
 public:
 
-    Gladiator(GladiatorID, Level);
+    Gladiator(GladiatorID, Level = 0, TrainerID = 0);
     ~Gladiator();
     Gladiator(const Gladiator);
     Level GetLevel();
-    bool operator==();
-    bool operator<();
-    bool operator>();
+    TrainerID GetTrainerID();
+    void IncreaseLevel(LevelIncrease);
+    bool operator==(Gladiator&);
+    bool operator<(Gladiator&);
+    bool operator>(Gladiator&);
 
 private:
 

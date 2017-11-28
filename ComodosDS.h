@@ -27,8 +27,14 @@ private:
 
     SplayTree<Trainer> trainers;
     SplayTree<Gladiator> gladiators;
-    SplayTree<Level> levels;
-    Gladiator* bestGladiator;
+    SplayTree<LevelsNode> levels;
+    Gladiator bestGladiator;
+    /**
+     * decrease numOfGlads in the siutable level
+     * if is the last glad, it deletes the Node
+     */
+    void RemoveGladiatorFromLevelsTree(Level);
+    void AddGladiatorToLevelsTree(Level);
 };
 
 
