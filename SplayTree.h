@@ -7,8 +7,24 @@ class SplayTree {
 
 public:
 
+    /**
+     * empty tree constructor, puts null  in root.
+     */
     SplayTree();
+
+    /**
+     * constructor must receive data for root.
+     */
+    explicit SplayTree(T&);
+
+    /**
+     * destructor
+     */
     ~SplayTree();
+
+    /**
+     *
+     */
     void Insert(T&);
     void Delete(T&);
     T& Find(T&);
@@ -17,11 +33,12 @@ private:
 
     SplayTree* left;
     SplayTree* right;
-    T& data;
+    T* data;
 
     void Splay();
     void Split();
     void Join();
+    void DeleteSubTree();
 
 };
 

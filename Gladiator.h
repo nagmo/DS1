@@ -13,7 +13,7 @@ public:
 
     Gladiator(GladiatorID, Level);
     ~Gladiator();
-    Gladiator(const Gladiator);
+    Gladiator(const Gladiator&);
     Level GetLevel();
     bool operator==();
     bool operator<();

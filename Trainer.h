@@ -18,7 +18,7 @@ private:
 
     TrainerID id;
     Gladiator bestGladiator;
-    SplayTree* gladiators;
+    SplayTree<Gladiator>* gladiators;
 
 };
 
