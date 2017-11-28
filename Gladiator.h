@@ -13,7 +13,7 @@ public:
 
     Gladiator(GladiatorID, Level = 0, TrainerID = 0);
     ~Gladiator();
-    Gladiator(const Gladiator);
+    Gladiator(const Gladiator&);
     Level GetLevel();
     TrainerID GetTrainerID();
     void IncreaseLevel(LevelIncrease);
