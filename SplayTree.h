@@ -14,6 +14,11 @@ public:
 
     /**
      * constructor must receive data for root.
+     * type T must support a construction by reference (Copy constructor)
+     * for example:
+     *      new T(T&)
+     *
+     * must be supported!!
      */
     explicit SplayTree(T&);
 
@@ -38,7 +43,6 @@ private:
     void Splay();
     void Split();
     void Join();
-    void DeleteSubTree();
 
 };
 
