@@ -18,26 +18,24 @@ class SplayTreeWrapper{
 
 public:
 
-    SplayTreeWrapper(){
-        tree = new SplayTree<T>();
-    }
+    SplayTreeWrapper() : numOfItems(0){ tree = new SplayTree<T>(); }
 
-    ~SplayTreeWrapper(){
-        delete tree;
-    }
+    ~SplayTreeWrapper(){ delete tree; }
 
-    T& getRootData(){
-        return tree->getRootData();
-    };
-    T& Find(T& data){
-        return InnerFind(data, tree);
-    };
+    T& getRootData(){ return tree->getRootData(); };
+
+    T& Find(T& data){ return InnerFind(data, tree); };
+
     void Insert(T& newData){
         InnerInsert(newData, tree);
+        numOfItems++;
     };
     void Delete(T& data){
         InnerDelete(data, tree);
+        numOfItems--;
     };
+
+    int size(){ return numOfItems; }
 
     typedef void (*Func)(T&);
 
@@ -55,6 +53,7 @@ public:
 
 private:
     SplayTree<T>* tree;
+    int numOfItems;
 };
 
 /************************************************************************
