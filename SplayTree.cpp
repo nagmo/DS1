@@ -185,3 +185,29 @@ T& getMaxElement(SplayTree<T>* root){
         return getMaxElement(root->right);
     }
 }
+
+/**
+ * traversal functions for tree.
+ * @tparam T
+ * @param f
+ */
+template <class T>
+void SplayTree<T>::InOrder(Func f){
+    if(this->left != nullptr) this->left->InOrder(f);
+    f(this->data);
+    if(this->right != nullptr) this->right->InOrder(f);
+}
+
+template <class T>
+void SplayTree<T>::PreOrder(Func f){
+    f(this->data);
+    if(this->left != nullptr) this->left->InOrder(f);
+    if(this->right != nullptr) this->right->InOrder(f);
+}
+
+template <class T>
+void SplayTree<T>::PostOrder(Func f){
+    if(this->left != nullptr) this->left->InOrder(f);
+    if(this->right != nullptr) this->right->InOrder(f);
+    f(this->data);
+}

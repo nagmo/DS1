@@ -5,19 +5,18 @@
 #include "utility.h"
 
 
-/************************************************************************
-
- NOTE: the element T must support the following:
-        copy Constructor
-        operators overloading: ==, <, >
-
-
- ************************************************************************/
 template <class T>
 class SplayTree;
 
+/*************************************************************************
+ * this class wraps the splay tree in order to make all tree operations
+ * appear as methods.
+ * the usage of the tree shuld be only with the wrapper.
+ ************************************************************************/
 template <class T>
 class SplayTreeWrapper{
+
+public:
 
     SplayTreeWrapper(){
         tree = new SplayTree<T>();
@@ -27,10 +26,8 @@ class SplayTreeWrapper{
         delete tree;
     }
 
-
-public:
     T& getRootData(){
-        tree->getRootData();
+        return tree->getRootData();
     };
     T& Find(T& data){
         return InnerFind(data, tree);
@@ -42,10 +39,31 @@ public:
         InnerDelete(data, tree);
     };
 
+    typedef void (*Func)(T&);
+
+    void InOrder(Func f){
+        tree->InOrder(f);
+    }
+
+    void PreOrder(Func f){
+        tree->PreOrder(f);
+    }
+
+    void PostOrder(Func f){
+        tree->PostOrder(f);
+    }
+
 private:
     SplayTree<T>* tree;
 };
 
+/************************************************************************
+
+ NOTE: the element T must support the following:
+        copy Constructor
+        operators overloading: ==, <, >
+
+ ************************************************************************/
 template <class T>
 class SplayTree {
 
@@ -71,6 +89,18 @@ public:
     ~SplayTree();
 
     T& getRootData();
+
+    ///generic function for tree traversal.
+    typedef void (*Func)(T&);
+
+    /**
+    * traversal functions for tree.
+    * @tparam T
+    * @param f
+    */
+    void InOrder(Func f);
+    void PreOrder(Func f);
+    void PostOrder(Func f);
 
     friend T& InnerFind(T& data, SplayTree<T>* root);
     friend void InnerInsert(T& newData, SplayTree<T>* root);
