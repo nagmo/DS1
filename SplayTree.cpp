@@ -23,8 +23,7 @@ SplayTree<T>::SplayTree() : left(nullptr), right(nullptr), data(nullptr) {}
  * @param data
  */
 template <class T>
-SplayTree<T>::SplayTree(T& data, SplayTree<T>* left = nullptr,
-                        SplayTree<T>* right = nullptr) :
+SplayTree<T>::SplayTree(T& data, SplayTree<T>* left, SplayTree<T>* right) :
         left(left), right(right), data(nullptr) {
     this->data = new T(data);
 }
@@ -52,12 +51,12 @@ SplayTree<T>::~SplayTree(){
 }
 
 template <class T>
-T& SplayTree::getRootData() {
+T& SplayTree<T>::getRootData() {
     return this->data;
 }
 
 template <class T>
-T& Find(T& data, SplayTree<T>* root){
+T& InnerFind(T& data, SplayTree<T>* root){
     root = Splay(data, root);
     if(root->data == data){
         return root->data;
@@ -73,7 +72,7 @@ T& Find(T& data, SplayTree<T>* root){
  * @param root
  */
 template <class T>
-void Insert(T& newData, SplayTree<T>* root) {
+void InnerInsert(T& newData, SplayTree<T>* root) {
     root = Splay(newData, root);
     if(root->data == newData)
         throw TreeElementAllreadyInTreeException();
@@ -87,7 +86,7 @@ void Insert(T& newData, SplayTree<T>* root) {
 }
 
 template <class T>
-friend void Delete(T& data, SplayTree<T>* root){
+void InnerDelete(T& data, SplayTree<T>* root){
     root = Splay(data, root);
     if(root->data == data){
         delete root->data;
@@ -179,7 +178,7 @@ SplayTree<T>* RotateLeft(SplayTree<T>* x){
  * @return
  */
 template <class T>
-friend T& getMaxElement(SplayTree<T>* root){
+T& getMaxElement(SplayTree<T>* root){
     if(root->right == nullptr){
         return root->data;
     }else{

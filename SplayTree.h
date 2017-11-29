@@ -13,8 +13,38 @@
 
 
  ************************************************************************/
+template <class T>
+class SplayTree;
+
+template <class T>
+class SplayTreeWrapper{
+
+    SplayTreeWrapper(){
+        tree = new SplayTree<T>();
+    }
+
+    ~SplayTreeWrapper(){
+        delete tree;
+    }
 
 
+public:
+    T& getRootData(){
+        tree->getRootData();
+    };
+    T& Find(T& data){
+        return InnerFind(data, tree);
+    };
+    void Insert(T& newData){
+        InnerInsert(newData, tree);
+    };
+    void Delete(T& data){
+        InnerDelete(data, tree);
+    };
+
+private:
+    SplayTree<T>* tree;
+};
 
 template <class T>
 class SplayTree {
@@ -42,9 +72,9 @@ public:
 
     T& getRootData();
 
-    friend T& Find(T& data, SplayTree<T>* root);
-    friend void Insert(T& newData, SplayTree<T>* root);
-    friend void Delete(T& data, SplayTree<T>* root);
+    friend T& InnerFind(T& data, SplayTree<T>* root);
+    friend void InnerInsert(T& newData, SplayTree<T>* root);
+    friend void InnerDelete(T& data, SplayTree<T>* root);
     friend SplayTree* Splay(T&, SplayTree*);
     friend SplayTree<T>* RotateRight(SplayTree<T>* root);
     friend SplayTree<T>* RotateLeft(SplayTree<T>* root);
@@ -67,7 +97,7 @@ private:
 };
 
 template <class T>
-T& Find(T& data, SplayTree<T>* root);
+T& InnerFind(T& data, SplayTree<T>* root);
 
 /**
  * insert element to the tree, the elemnt will be at the root.
@@ -76,10 +106,10 @@ T& Find(T& data, SplayTree<T>* root);
  * @param root
  */
 template <class T>
-void Insert(T& newData, SplayTree<T>* root);
+void InnerInsert(T& newData, SplayTree<T>* root);
 
 template <class T>
-friend void Delete(T& data, SplayTree<T>* root);
+void InnerDelete(T& data, SplayTree<T>* root);
 
 /**
  * function to splay tree. will be used in find, insert, delete.
@@ -121,7 +151,7 @@ SplayTree<T>* RotateLeft(SplayTree<T>* root);
  * @return
  */
 template <class T>
-friend T& getMaxElement(SplayTree<T>* root);
+T& getMaxElement(SplayTree<T>* root);
 
 /**
  * Tree Exceptions.
