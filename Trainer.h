@@ -5,6 +5,7 @@
 #include "utility.h"
 #include "Gladiator.h"
 #include "SplayTree.h"
+class GladiatorTree;
 
 class Trainer {
 
@@ -15,13 +16,14 @@ public:
     //remeber to update the bestGlad of a trainer
     void AddGladiator(Gladiator&);
     Gladiator& GetBestGladiator();
-    //SplayTree<NodeWrapper<Gladiator>>& GetGladiatorsTree();
+    GladiatorTree& GetGladiatorsTree();
+    TrainerID GetID();
 
 private:
 
     TrainerID id;
     Gladiator bestGladiator;
-    SplayTree<Gladiator> gladiators;
+    GladiatorTree& gladiators;
 
 };
 

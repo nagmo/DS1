@@ -51,6 +51,10 @@ public:
         tree->PostOrder(f);
     }
 
+    T& getMaxElement(){
+        return tree->getMaxElement(tree);
+    }
+
 private:
     SplayTree<T>* tree;
     int numOfItems;

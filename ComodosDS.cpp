@@ -4,21 +4,13 @@
 
 #include "ComodosDS.h"
 
+//todo: wrap wrappertree with gladiator and save max glad, override insert override delete
 
 /**
  * use to create a new instant of ComodosDS
  * use inside try block
  */
-ComodosDS::ComodosDS(){
-    //bestGladiator with id = 1
-    trainers = SplayTree<NodeWrapper<Trainer>>();
-    gladiators = SplayTree<NodeWrapper<Gladiator>>();
-}
-
-ComodosDS::~ComodosDS(){
-    delete gladiators;
-    delete trainers;
-}
+ComodosDS::ComodosDS() : trainers(TrainerTree()), gladiators(GladiatorTree()) {}
 /**
  * use inside try block
  * exceptions:
@@ -29,10 +21,9 @@ void ComodosDS::AddTrainer(TrainerID id){
     if(id <= 0) throw InvalidInputException();
     //not inside try to let exception get to 'C' function
     Trainer newTrainer = Trainer(id);
-    NodeWrapper trainerWrapper = NodeWrapper<Trainer>(newTrainer);
     //should throw an exception in case of an error
     try{
-        trainers.Insert(trainerWrapper);
+        trainers.AddTrainer(newTrainer);
     }
     catch (TreeElementAllreadyInTreeException&){
         throw FailureException();
@@ -53,31 +44,29 @@ void ComodosDS::AddTrainer(TrainerID id){
 void ComodosDS:: BuyGladiator(GladiatorID gladID, TrainerID trainID, Level level){
     //handle errors
     if(gladID <= 0 || trainID <= 0 || level <= 0) throw InvalidInputException();
-    //create new gladiator
-    Gladiator newGlad = Gladiator(gladID, level);
-    //try add to gladiators tree
-    //in case of an error will throw exception
-    try {
-        gladiators.Insert(newGlad);
+    //check if trainer exists
+    Trainer tempTrainer = Trainer(trainID);
+    //find the trainer
+    //if doesnt exist, would throw FailureException, remove gladiator from glad tree
+    try{
+        Trainer currTrainer = trainers.Find(tempTrainer);
+        //add glad to currTrainer
+        //create new gladiator
+        Gladiator newGlad = Gladiator(gladID, &currTrainer, level);
+        //try add to gladiators tree
+        //in case of an error will throw exception
+        try {
+            gladiators.AddGladiator(newGlad);
+        }
+        catch (TreeElementAllreadyInTreeException&){
+            throw FailureException();
+        }
+        currTrainer.AddGladiator(newGlad);
     }
-    catch (TreeElementAllreadyInTreeException&){
+        //case of trainer doesnt exist
+    catch (TreeElementNotInTreeException&){
         throw FailureException();
     }
-    //after insertion
-    //try add to trainers
-    //create instant of trainer
-    Trainer tempTrainer = Trainer(trainID);
-    NodeWrapper tempNodeTrainer = NodeWrapper<Trainer>(tempTrainer);
-    //find the trainer
-    //if doesnt exist, would throw FailureException
-    try{
-        NodeWrapper currTrainer = trainers.Find(tempNodeTrainer);
-        //add glad to currTrainer
-        //update bestGlad of the trainer inside this function
-        currTrainer.data.AddGladiator(newGlad);
-    }
-        //todo: yuval - add catch
-    catch (exception&){}
 }
 /**
  * delete the gladiator from glads tree and from its trainer tree
@@ -87,22 +76,26 @@ void ComodosDS::FreeGladiator(GladiatorID gladID){
     if(gladID <= 0) throw InvalidInputException();
     //create an instant of glad
     Gladiator tempGlad = Gladiator(gladID);
-    NodeWrapper<Gladiator> tempNodeGlad = NodeWrapper<Gladiator>(tempGlad);
-    //get the current gladiator
-    NodeWrapper<Gladiator> currGlad = gladiators.Find(tempNodeGlad);
-
-    //create an instant of trainer
-    Trainer tempTrainer = Trainer(tempGlad.GetTrainerID());
-    NodeWrapper<Trainer> tempNodeTrainer = NodeWrapper<Trainer>(tempTrainer);
+    //save trainer id in order to find the trainer
+    TrainerID trainerID = tempGlad.GetTrainer()->GetID();
+    //remove glad from gald tree
+    //todo: yuval - add try
     try{
-        //get the current trainer
-        NodeWrapper currTrainer = trainers.Find(tempNodeTrainer);
-        //remove gladiator from trainer
-        //update the bestGlad should happen in the remove function
-        currTrainer.data.GetGladiatorsTree().Delete(currGlad);
+        gladiators.DeleteGladiator(tempGlad);
     }
-        //todo: yuval - add catch
-    catch (exception&){}
+    catch (TreeElementNotInTreeException&){
+        throw FailureException();
+    }
+    //remove glad from trainer
+    //create an instant of trainer
+    Trainer tempTrainer = Trainer(trainerID);
+    //get the current trainer
+    //not inside try because trainer must exists
+    Trainer currTrainer = trainers.Find(tempTrainer);
+    //remove gladiator from trainer
+    //update the bestGlad should happen in the remove function
+    //todo: change trainer.h
+    currTrainer.GetGladiatorsTree().DeleteGladiator(tempGlad);
 }
 /**
  * update the level of a Gladiator
@@ -114,36 +107,38 @@ void ComodosDS::LevelUp(GladiatorID gladID, LevelIncrease levelIncrease){
     if(gladID <= 0 || levelIncrease <= 0) throw InvalidInputException();
     //get the gladiator
     Gladiator tempGlad = Gladiator(gladID);
-    NodeWrapper<Gladiator> tempNodeGlad = NodeWrapper<Gladiator>(tempGlad);
     try{
         //if not exists should throw exception
-        NodeWrapper<Gladiator> currGlad = gladiators.Find(tempNodeGlad);
+        Gladiator currGlad = gladiators.Find(tempGlad);
 
         //update gladiator level
-        currGlad.data.IncreaseLevel(levelIncrease);
+        currGlad.IncreaseLevel(levelIncrease);
+        //remove and inset from trainers tree
+        currGlad.GetTrainer()->GetGladiatorsTree().DeleteGladiator(tempGlad);
+        currGlad.GetTrainer()->GetGladiatorsTree().AddGladiator(currGlad);
     }
-        //todo: yuval - add catch
-    catch (exception&){}
+    catch (TreeElementNotInTreeException&){
+        throw FailureException();
+    }
 }
 
 GladiatorID ComodosDS::GetTopGladiator(TrainerID trainerID){
     if(trainerID == 0) throw InvalidInputException();
     if(trainerID < 0){
-        //todo: yuval - reutrn data from glads tree
+        return gladiators.getMaxElement().GetGladiatorID();
     }
     //search for trainer
     //create an instant of a trainer
     Trainer tempTrainer = Trainer(trainerID);
-    NodeWrapper<Trainer> tempNodeTrainer = NodeWrapper<Trainer>(tempTrainer);
     //search in trainers tree
     try{
         //if not found, should throw exception
-        NodeWrapper<Trainer> currTrainer = trainers.Find(tempNodeTrainer);
-        //todo: - add catch
-        return currTrainer.data.GetBestGladiator().GetGladiatorID();
+        Trainer currTrainer = trainers.Find(tempTrainer);
+        return currTrainer.GetBestGladiator().GetGladiatorID();
     }
-    catch (exception&){};
-
+    catch (TreeElementNotInTreeException&){
+        throw FailureException();
+    };
 }
 
 GladByLevel GetAllGladiatorsByLevel(TrainerID);
@@ -157,27 +152,57 @@ void ComodosDS::UpgradeGladiator(GladiatorID currGladID, GladiatorID newGladID){
     if(currGladID <= 0 || newGladID <= 0) throw InvalidInputException();
     //find the glad, delete it from the tree, update its ID and add it to the tree
     Gladiator tempGlad = Gladiator(currGladID);
-    NodeWrapper<Gladiator> tempNodeGlad = NodeWrapper<Gladiator>(tempGlad);
-    //todo: yuval - think about it
-    NodeWrapper<Gladiator> currGlad = tempNodeGlad;
     try{
-        currGlad = gladiators.Find(tempNodeGlad);
-    }
-        //todo: yuval - add catch
-    catch (exception&){}
-    //creating the new gladiator
-    Gladiator newGlad = Gladiator(newGladID, currGlad.data.GetLevel(), currGlad.data.GetTrainerID());
-    NodeWrapper<Gladiator> newNodeGlad = NodeWrapper<Gladiator>(newGlad);
-    //delete glad from galdiators tree
-    gladiators.Delete(currGlad);
-    gladiators.Insert(newNodeGlad);
+        Gladiator currGlad = gladiators.Find(tempGlad);
 
-    //update the trainers tree
-    Trainer tempTrainer = Trainer(newGlad.GetTrainerID());
-    NodeWrapper<Trainer> tempNodeTrainer = NodeWrapper<Trainer>(tempTrainer);
-    NodeWrapper<Trainer> currTrainer = trainers.Find(tempNodeTrainer);
-    //delete the glad from its trainer
-    currTrainer.data.GetGladiatorsTree().Delete(currGlad);
-    currTrainer.data.GetGladiatorsTree().Insert((newNodeGlad));
+        //creating the new gladiator
+        Gladiator newGlad = Gladiator(newGladID, currGlad.GetTrainer(), currGlad.GetLevel());
+        //delete glad from galdiators tree
+        gladiators.Delete(currGlad);
+        gladiators.Insert(newGlad);
+
+        //update the trainers tree
+        Trainer* currTrainer = newGlad.GetTrainer();
+        //delete the glad from its trainer
+        currTrainer->GetGladiatorsTree().DeleteGladiator(tempGlad);
+        currTrainer->GetGladiatorsTree().AddGladiator((newGlad));
+    }
+    catch (TreeElementNotInTreeException&){
+        throw InvalidInputException();
+    }
+
 }
 void UpdateLevels(StimulantCode, StimulantFactor);
+
+
+GladiatorTree::GladiatorTree() : SplayTreeWrapper<Gladiator>(), bestGladiator(Gladiator(1)){}
+
+GladiatorTree::~GladiatorTree(){}
+
+void GladiatorTree::UpdateBestGladiator(Gladiator& gladiator){
+    bestGladiator = Gladiator(gladiator);
+}
+void GladiatorTree::AddGladiator(Gladiator& gladiator) {
+    Insert(gladiator);
+    //if is better
+    if(gladiator.GetLevel() > bestGladiator.GetLevel() || (gladiator.GetLevel() == bestGladiator.GetLevel() &&
+            gladiator.GetGladiatorID() < bestGladiator.GetGladiatorID())){
+        bestGladiator = Gladiator(gladiator);
+    }
+}
+
+void GladiatorTree::DeleteGladiator(Gladiator& gladiator){
+    if(gladiator.GetGladiatorID() == bestGladiator.GetGladiatorID()){
+        //todo: Nevo - How should I use getMaxElement? I need to send it the root NODE but dont have a suitable function to do it
+        //todo: Nevo - also, there are some compilation errors about inaccessible fields in the Trees classes
+        bestGladiator = Gladiator(getMaxElement(this.splayTree));
+    }
+    Delete(gladiator);
+
+}
+
+TrainerTree::TrainerTree() : SplayTreeWrapper<Trainer>(){};
+
+void TrainerTree::DeleteGladiator(Gladiator& gladiator){
+    //todo: after changing trainer.h->gladiators
+}

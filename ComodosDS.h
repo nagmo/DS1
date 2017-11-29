@@ -8,12 +8,35 @@
 #include "Trainer.h"
 
 using std::exception;
+
+class GladiatorTree : SplayTreeWrapper<Gladiator>{
+public:
+    GladiatorTree();
+    ~GladiatorTree();
+    void UpdateBestGladiator(Gladiator&);
+    void AddGladiator(Gladiator&);
+    void DeleteGladiator(Gladiator&);
+
+private:
+    Gladiator bestGladiator;
+
+};
+
+class TrainerTree : SplayTreeWrapper<Trainer>{
+public:
+    TrainerTree();
+    ~TrainerTree();
+    void DeleteGladiator(Gladiator&);
+    void AddTrainer(Trainer&);
+private:
+};
+
 class ComodosDS {
 
 public:
 
     ComodosDS();
-    ~ComodosDS();
+    ~ComodosDS() = default;
     /**
      * use inside try block
      * exceptions:
@@ -59,8 +82,8 @@ public:
 
 private:
 
-    SplayTree<NodeWrapper<Trainer>> trainers;
-    SplayTree<NodeWrapper<Gladiator>> gladiators;
+    TrainerTree trainers;
+    GladiatorTree gladiators;
 };
 
 

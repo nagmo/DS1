@@ -3,21 +3,20 @@
 //
 
 #include "Gladiator.h"
+Gladiator::Gladiator(GladiatorID gladiatorID, Trainer* trainer,  Level level) :
+        id(gladiatorID), level(level), trainer(trainer) {}
 
-Gladiator::Gladiator(GladiatorID gladiatorID, Level level, TrainerID trainerID) :
-        id(gladiatorID), level(level), trainer(trainerID) {}
 Gladiator::~Gladiator() = default;
-Gladiator::Gladiator(const Gladiator& gladiator){
-    id =gladiator.id;
-    level = gladiator.level;
-    trainer = gladiator.trainer;
+
+Gladiator::Gladiator(const Gladiator& gladiator) : id(gladiator.id),
+                                                   trainer(gladiator.trainer), level(gladiator.level){
 }
 
 Level Gladiator::GetLevel(){
     return level;
 }
 
-TrainerID Gladiator::GetTrainerID(){
+Trainer* Gladiator::GetTrainer(){
     return trainer;
 }
 

@@ -3,17 +3,18 @@
 #define EX1_GLADIATOR_H
 
 #include "utility.h"
+class Trainer;
 
 class Gladiator {
 
 public:
 
-    Gladiator(GladiatorID, Level = 0, TrainerID = 0);
+    Gladiator(GladiatorID, Trainer* = nullptr, Level = 0);
     ~Gladiator();
     Gladiator(const Gladiator&);
     Level GetLevel();
     GladiatorID GetGladiatorID();
-    TrainerID GetTrainerID();
+    Trainer* GetTrainer();
     /**
      * increase the level by levelIncrease
      */
@@ -41,7 +42,7 @@ private:
 
     GladiatorID id;
     Level level;
-    TrainerID trainer;
+    Trainer* trainer;
 };
 
 
