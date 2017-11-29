@@ -3,5 +3,5 @@ project(EX1)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES main.cpp SplayTree.cpp Trainer.cpp Gladiator.cpp ComodosDS.cpp library1.cpp utility.h)
+set(SOURCE_FILES main.cpp SplayTree.cpp Trainer.cpp Gladiator.cpp ComodosDS.cpp library1.cpp NodeWrapper.cpp)
 add_executable(EX1 ${SOURCE_FILES})

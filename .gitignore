@@ -1,5 +1,11 @@
 
-Gladiator.h
 .idea/misc.xml
 .idea/vcs.xml
 .idea/workspace.xml
+*.iml
+*.xml
+.idea
+cmake-build-debug
+CMakeLists.txt
+CMakeLists.txt
+CMakeLists.txt
