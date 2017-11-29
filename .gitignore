@@ -2,6 +2,7 @@
 .idea/misc.xml
 .idea/vcs.xml
 .idea/workspace.xml
+<<<<<<< HEAD
 *.iml
 *.xml
 .idea
@@ -9,3 +10,7 @@ cmake-build-debug
 CMakeLists.txt
 CMakeLists.txt
 CMakeLists.txt
+=======
+cmake-build-debug
+.CMakeLists.txt
+>>>>>>> 46fa52b01db6d756f524340ae52e3228f288270b
