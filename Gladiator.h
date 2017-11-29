@@ -12,6 +12,7 @@ public:
     ~Gladiator();
     Gladiator(const Gladiator&);
     Level GetLevel();
+    GladiatorID GetGladiatorID();
     TrainerID GetTrainerID();
     /**
      * increase the level by levelIncrease

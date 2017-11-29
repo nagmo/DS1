@@ -6,6 +6,7 @@
 #include "SplayTree.h"
 #include "Gladiator.h"
 #include "Trainer.h"
+#include "NodeWrapper.h"
 
 using std::exception;
 class ComodosDS {
@@ -59,19 +60,8 @@ public:
 
 private:
 
-    SplayTree<Trainer> trainers;
-    SplayTree<Gladiator> gladiators;
-    SplayTree<LevelsNode> levels;
-    Gladiator bestGladiator;
-    /**
-     * decrease numOfGlads in the suitable level
-     * if is the last glad, it deletes the Node
-     */
-    void RemoveGladiatorFromLevelsTree(Level);
-    /**
-     * increse numOfGlads in the suitable level
-     */
-    void AddGladiatorToLevelsTree(Level);
+    SplayTree<NodeWrapper<Trainer>> trainers;
+    SplayTree<NodeWrapper<Gladiator>> gladiators;
 };
 
 
