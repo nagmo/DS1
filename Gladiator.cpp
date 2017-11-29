@@ -4,7 +4,7 @@
 
 #include "Gladiator.h"
 
-Gladiator::Gladiator(GladiatorID gladiatorID, Level level = 0, TrainerID trainerID = 0) :
+Gladiator::Gladiator(GladiatorID gladiatorID, Level level, TrainerID trainerID) :
         id(gladiatorID), level(level), trainer(trainerID) {}
 Gladiator::~Gladiator() = default;
 Gladiator::Gladiator(const Gladiator& gladiator){

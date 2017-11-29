@@ -6,7 +6,6 @@
 #include "SplayTree.h"
 #include "Gladiator.h"
 #include "Trainer.h"
-#include "NodeWrapper.h"
 
 using std::exception;
 class ComodosDS {
