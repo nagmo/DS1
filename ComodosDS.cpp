@@ -1,9 +1,6 @@
 
 #include "ComodosDS.h"
 
-//todo: wrap wrappertree with gladiator and save max glad,override insert override delete
-//todo: Yuval -> is it done? the wrappers are in the header..
-
 /**
  * use to create a new instant of ComodosDS
  * use inside try block
@@ -18,11 +15,10 @@ ComodosDS::ComodosDS() : trainers(TrainerTree()), gladiators(GladiatorTree()) {}
 void ComodosDS::AddTrainer(TrainerID id){
     if(id <= 0) throw InvalidInputException();
     //not inside try to let exception get to 'C' function
-    //todo: why not in try? if exception is not cathced it will float up.
     Trainer newTrainer = Trainer(id);
     //should throw an exception in case of an error
     try{
-        trainers.AddTrainer(newTrainer);
+        trainers.Insert(newTrainer);
     }
     catch (TreeElementAllreadyInTreeException&){
         throw FailureException();
@@ -78,7 +74,6 @@ void ComodosDS::FreeGladiator(GladiatorID gladID){
     //save trainer id in order to find the trainer
     TrainerID trainerID = tempGlad.GetTrainer()->GetID();
     //remove glad from gald tree
-    //todo: yuval - add try
     try{
         gladiators.DeleteGladiator(tempGlad);
     }
@@ -93,7 +88,6 @@ void ComodosDS::FreeGladiator(GladiatorID gladID){
     Trainer currTrainer = trainers.Find(tempTrainer);
     //remove gladiator from trainer
     //update the bestGlad should happen in the remove function
-    //todo: change trainer.h
     currTrainer.GetGladiatorsTree().DeleteGladiator(tempGlad);
 }
 /**
@@ -201,15 +195,10 @@ void GladiatorTree::AddGladiator(Gladiator& gladiator) {
 
 void GladiatorTree::DeleteGladiator(Gladiator& gladiator){
     if(gladiator.GetGladiatorID() == bestGladiator.GetGladiatorID()){
-        //todo: Yuval - fixed.
         bestGladiator = Gladiator(this->getMaxElement());
     }
     Delete(gladiator);
 
 }
 
-TrainerTree::TrainerTree() : SplayTreeWrapper<Trainer>(){};
 
-void TrainerTree::DeleteGladiator(Gladiator& gladiator){
-    //todo: after changing trainer.h->gladiators
-}

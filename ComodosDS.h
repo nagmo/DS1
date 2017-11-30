@@ -10,11 +10,9 @@
 
 using std::exception;
 
-class GladiatorTree : SplayTreeWrapper<Gladiator>{
+class GladiatorTree : public SplayTreeWrapper<Gladiator>{
 public:
     GladiatorTree();
-    //todo: Yuval - I think we should just ignore the destructor. and the "SplayTreeWrapper<Gladiator>"'s D'tor will be used.
-    //~GladiatorTree() = default;
     void UpdateBestGladiator(Gladiator&);
     void AddGladiator(Gladiator&);
     void DeleteGladiator(Gladiator&);
@@ -24,23 +22,13 @@ private:
 
 };
 
-class TrainerTree : SplayTreeWrapper<Trainer>{
-public:
-    //todo: Yuval - here too.
-    TrainerTree();
-    //~TrainerTree() = default;
-    //todo: yuval - why not use parent insert and delete? no special action needed
-    void DeleteGladiator(Gladiator&);
-    void AddTrainer(Trainer&);
-private:
-};
+class TrainerTree : public SplayTreeWrapper<Trainer>{};
 
 class ComodosDS {
 
 public:
 
     ComodosDS();
-    ~ComodosDS() = default;
     /**
      * use inside try block
      * exceptions:

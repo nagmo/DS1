@@ -6,7 +6,6 @@
 #include "Gladiator.h"
 #include "SplayTree.h"
 #include "ComodosDS.h"
-//todo: Yuval - can we include comodos here? isn't it an inclusion circle?
 
 class GladiatorTree;
 
@@ -23,7 +22,6 @@ public:
     /**
     * default destructor is fine here.
     */
-    ~Trainer() = default;
 
     /**
     * add gladiator to the tree. check if it the best so far,

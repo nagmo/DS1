@@ -21,7 +21,7 @@ void Trainer::AddGladiator(Gladiator &newGladiator) {
     if(newGladiator.GetLevel() > bestGladiator.GetLevel()){
         bestGladiator = Gladiator(newGladiator);
     }
-    gladiators.Insert(newGladiator);
+    gladiators.AddGladiator(newGladiator);
 }
 
 /**

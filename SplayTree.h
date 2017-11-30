@@ -30,6 +30,7 @@ public:
         InnerInsert(newData, tree);
         numOfItems++;
     };
+
     void Delete(T& data){
         InnerDelete(data, tree);
         numOfItems--;
@@ -51,10 +52,6 @@ public:
 
     void PostOrder(Func f){
         tree->PostOrder(f);
-    }
-
-    T& getMaxElement(){
-        return tree->getMaxElement(tree);
     }
 
 private:

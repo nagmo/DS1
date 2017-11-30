@@ -8,8 +8,6 @@
 class GladByLevel{
 public:
 
-    GladByLevel() = default;
-
     ~GladByLevel(){
         delete[] gladiators;
     }
