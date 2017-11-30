@@ -9,8 +9,8 @@ class Gladiator {
 
 public:
 
-    Gladiator(GladiatorID, Trainer* = nullptr, Level = 0, bool subOrderFlag = false);
-    ~Gladiator();
+    explicit Gladiator(GladiatorID, Trainer* = NULL, Level = 0, bool subOrderFlag = false);
+    //~Gladiator();
     Gladiator(const Gladiator&);
 
     Level GetLevel();

@@ -4,74 +4,6 @@
 
 #include "utility.h"
 
-
-template <class T>
-class SplayTree;
-template <class T>
-void InnerDelete(T& data, SplayTree<T>* root);
-template <class T>
-T& InnerFind(T& data, SplayTree<T>* root);
-
-/**
- * insert element to the tree, the elemnt will be at the root.
- * @tparam T
- * @param newData
- * @param root
- */
-template <class T>
-void InnerInsert(T& newData, SplayTree<T>* root);
-
-/*************************************************************************
- * this class wraps the splay tree in order to make all tree operations
- * appear as methods.
- * the usage of the tree shuld be only with the wrapper.
- ************************************************************************/
-template <class T>
-class SplayTreeWrapper{
-
-public:
-
-    SplayTreeWrapper() : numOfItems(0){ tree = new SplayTree<T>(); }
-
-    ~SplayTreeWrapper(){ delete tree; }
-
-    T& getRootData(){ return tree->getRootData(); };
-
-    T& Find(T& data){ return InnerFind<T>(data, tree); };
-
-    void Insert(T& newData){
-        InnerInsert<T>(newData, tree);
-        numOfItems++;
-    };
-
-    void Delete(T& data){
-        InnerDelete<T>(data, tree);
-        numOfItems--;
-    };
-
-    int size(){ return numOfItems; }
-
-    T& GetMaxElement(){ return getMaxElement(tree); }
-
-    typedef void (*Func)(T&);
-
-    void InOrder(Func f, bool reverse = false){
-        tree->InOrder(f, reverse);
-    }
-
-    void PreOrder(Func f){
-        tree->PreOrder(f);
-    }
-
-    void PostOrder(Func f){
-        tree->PostOrder(f);
-    }
-
-private:
-    SplayTree<T>* tree;
-    int numOfItems;
-};
-
 /************************************************************************
 
  NOTE: the element T must support the following:
@@ -84,6 +16,13 @@ class SplayTree {
 
 public:
 
+    /**
+    * constructor with data initiation.
+    * @tparam T
+    * @param data
+    */
+    explicit SplayTree(T&, SplayTree* left = NULL,
+                       SplayTree* right= NULL);
     /**
     * no data constructor
     * @tparam T
@@ -105,6 +44,13 @@ public:
 
     T& getRootData();
 
+    SplayTree* GetLeft(){ return left; }
+
+    void SetLeft(SplayTree* splayTree = NULL){ left = splayTree;}
+
+    SplayTree* GetRight(){ return right;}
+
+    void SetRight(SplayTree* splayTree = NULL){ right = splayTree;}
     ///generic function for tree traversal.
     typedef void (*Func)(T&);
 
@@ -117,31 +63,26 @@ public:
     void PreOrder(Func f);
     void PostOrder(Func f);
 
-    friend T& InnerFind(T& data, SplayTree<T>* root);
-    friend void InnerInsert(T& newData, SplayTree<T>* root);
-    friend void InnerDelete(T& data, SplayTree<T>* root);
-    friend SplayTree* Splay(T&, SplayTree*);
-    friend SplayTree<T>* RotateRight(SplayTree<T>* root);
-    friend SplayTree<T>* RotateLeft(SplayTree<T>* root);
-    friend T& getMaxElement(SplayTree<T>* root);
-
 private:
 
     SplayTree *left;
     SplayTree *right;
     T* data;
-
-    /**
-    * constructor with data initiation.
-    * @tparam T
-    * @param data
-    */
-    explicit SplayTree(T&, SplayTree* left = nullptr,
-                       SplayTree* right= nullptr);
-
 };
 
+template <class T>
+void InnerDelete(T& data, SplayTree<T>* root);
+template <class T>
+T& InnerFind(T& data, SplayTree<T>* root);
 
+/**
+ * insert element to the tree, the elemnt will be at the root.
+ * @tparam T
+ * @param newData
+ * @param root
+ */
+template <class T>
+void InnerInsert(T& newData, SplayTree<T>* root);
 
 /**
  * function to splay tree. will be used in find, insert, delete.
@@ -184,6 +125,58 @@ SplayTree<T>* RotateLeft(SplayTree<T>* root);
  */
 template <class T>
 T& getMaxElement(SplayTree<T>* root);
+
+
+/*************************************************************************
+ * this class wraps the splay tree in order to make all tree operations
+ * appear as methods.
+ * the usage of the tree shuld be only with the wrapper.
+ ************************************************************************/
+template <class T>
+class SplayTreeWrapper{
+
+public:
+
+    SplayTreeWrapper() : numOfItems(0){ tree = new SplayTree<T>(); }
+
+    ~SplayTreeWrapper(){ delete tree; }
+
+    T& getRootData(){ return tree->getRootData(); };
+
+    T& Find(T& data){ return InnerFind(data, tree); };
+
+    void Insert(T& newData){
+        InnerInsert(newData, tree);
+        numOfItems++;
+    };
+
+    void Delete(T& data){
+        InnerDelete(data, tree);
+        numOfItems--;
+    };
+
+    int size(){ return numOfItems; }
+
+    T& GetMaxElement(){ return getMaxElement(tree); }
+
+    typedef void (*Func)(T&);
+
+    void InOrder(Func f, bool reverse = false){
+        tree->InOrder(f, reverse);
+    }
+
+    void PreOrder(Func f){
+        tree->PreOrder(f);
+    }
+
+    void PostOrder(Func f){
+        tree->PostOrder(f);
+    }
+
+private:
+    SplayTree<T>* tree;
+    int numOfItems;
+};
 
 /**
  * Tree Exceptions.

@@ -52,3 +52,7 @@ bool Gladiator::operator>(Gladiator& gladiator){
 void Gladiator::SetFlag(bool flag) {
     subOrderFlag = flag;
 }
+GladiatorID Gladiator::GetGladiatorID(){
+    return id;
+}
+

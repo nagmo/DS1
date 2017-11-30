@@ -3,9 +3,9 @@
 #define EX1_COMODOSDS_H
 
 #include "utility.h"
-#include "SplayTree.h"
 #include "Gladiator.h"
 #include "Trainer.h"
+#include "SplayTree.h"
 #include "GladByID.h"
 
 using std::exception;
@@ -22,7 +22,30 @@ private:
 
 };
 
-class TrainerTree : public SplayTreeWrapper<Trainer>{};
+class TrainerTree {
+public:
+    TrainerTree() {
+        tree = SplayTreeWrapper<Trainer>();
+    }
+
+    Trainer& getRootData(){ return tree.getRootData(); };
+
+    Trainer& Find(Trainer& data){ return tree.Find(data); };
+
+    void Insert(Trainer& newData){ tree.Insert(newData); };
+
+    void Delete(Trainer& data){ tree.Delete(data); };
+
+    int size(){ return tree.size(); }
+
+    Trainer& GetMaxElement(){ return tree.GetMaxElement(); }
+
+    typedef void (*Func)(Trainer&);
+
+    void InOrder(Func f, bool reverse = false){ tree.InOrder(f, reverse); }
+private:
+    SplayTreeWrapper<Trainer> tree;
+};
 
 class ComodosDS {
 
@@ -70,7 +93,8 @@ public:
     * @param newGladID
     */
     void UpgradeGladiator(GladiatorID, GladiatorID);
-    void UpdateLevels(StimulantCode, StimulantFactor);
+    //todo: implement
+    void UpdateLevels(StimulantCode, StimulantFactor){}
 
 private:
 

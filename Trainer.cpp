@@ -8,8 +8,8 @@
  * @param id
  */
 Trainer::Trainer(TrainerID id) :
-        id(id), bestGladiator(Gladiator(DUMMY, nullptr, DUMMY)),
-        gladiators(nullptr){
+        id(id), bestGladiator(Gladiator(DUMMY, NULL, DUMMY)),
+        gladiators(NULL){
     gladiators = new GladiatorTree();
 }
 

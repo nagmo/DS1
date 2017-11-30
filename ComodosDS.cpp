@@ -6,7 +6,10 @@
  * use to create a new instant of ComodosDS
  * use inside try block
  */
-ComodosDS::ComodosDS() : trainers(TrainerTree()), gladiators(GladiatorTree()) {}
+ComodosDS::ComodosDS(){
+    trainers = TrainerTree();
+    gladiators = GladiatorTree();
+}
 /**
  * use inside try block
  * exceptions:
@@ -205,7 +208,7 @@ void ComodosDS::UpgradeGladiator(GladiatorID currGladID, GladiatorID newGladID){
 void UpdateLevels(StimulantCode, StimulantFactor);
 
 
-GladiatorTree::GladiatorTree() : SplayTreeWrapper<Gladiator>(), bestGladiator(Gladiator(1)){}
+GladiatorTree::GladiatorTree() : SplayTreeWrapper<Gladiator>(), bestGladiator(Gladiator(-1)){}
 
 void GladiatorTree::UpdateBestGladiator(Gladiator& gladiator){
     bestGladiator = Gladiator(gladiator);
@@ -226,5 +229,6 @@ void GladiatorTree::DeleteGladiator(Gladiator& gladiator){
     Delete(gladiator);
 
 }
+
 
 

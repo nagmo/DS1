@@ -15,7 +15,7 @@
  * @tparam T
  */
 template <class T>
-SplayTree<T>::SplayTree() : left(nullptr), right(nullptr), data(nullptr) {}
+SplayTree<T>::SplayTree() : left(NULL), right(NULL), data(NULL) {}
 
 /**
  * constructor with data initiation.
@@ -24,7 +24,7 @@ SplayTree<T>::SplayTree() : left(nullptr), right(nullptr), data(nullptr) {}
  */
 template <class T>
 SplayTree<T>::SplayTree(T& data, SplayTree<T>* left, SplayTree<T>* right) :
-        left(left), right(right), data(nullptr) {
+        left(left), right(right), data(NULL) {
     this->data = new T(data);
 }
 
@@ -35,7 +35,7 @@ SplayTree<T>::SplayTree(T& data, SplayTree<T>* left, SplayTree<T>* right) :
  */
 template <class T>
 SplayTree<T>::SplayTree(T& data) :
-        left(nullptr), right(nullptr), data(nullptr) {
+        left(NULL), right(NULL), data(NULL) {
     this->data = new T(data);
 }
 
@@ -58,8 +58,8 @@ T& SplayTree<T>::getRootData() {
 template <class T>
 T& InnerFind(T& data, SplayTree<T>* root){
     root = Splay(data, root);
-    if(root->data == data){
-        return root->data;
+    if(root->getRootData() == data){
+        return root->getRootData();
     }else{
         throw TreeElementNotInTreeException();
     }
@@ -74,26 +74,26 @@ T& InnerFind(T& data, SplayTree<T>* root){
 template <class T>
 void InnerInsert(T& newData, SplayTree<T>* root) {
     root = Splay(newData, root);
-    if(root->data == newData)
+    if(root->getRootData() == newData)
         throw TreeElementAllreadyInTreeException();
-    else if(root->data > newData){
-        root = new SplayTree<T>(newData, root->left, root);
-        root->right->left = nullptr;
+    else if(root->getRootData() > newData){
+        root = new SplayTree<T>(newData, root->GetLeft(), root);
+        root->GetRight()->SetLeft();
     }else{
-        root = new SplayTree<T>(newData, root, root->right);
-        root->left->right = nullptr;
+        root = new SplayTree<T>(newData, root, root->GetRight());
+        root->GetLeft()->SetRight();
     }
 }
 
 template <class T>
 void InnerDelete(T& data, SplayTree<T>* root){
     root = Splay(data, root);
-    if(root->data == data){
-        delete root->data;
-        T& maxElementInLeft = getMaxElement(root->left);
-        SplayTree<T>* right = root->right;
-        root->left = Splay(maxElementInLeft, root->left);
-        root->right = right;
+    if(root->getRootData() == data){
+        delete root->getRootData();
+        T& maxElementInLeft = getMaxElement(root->GetLeft());
+        SplayTree<T>* right = root->GetRight();
+        root->SetLeft(Splay(maxElementInLeft, root->GetLeft()));
+        root->SetRight(right);
     }else
         throw TreeElementNotInTreeException();
 }
@@ -113,33 +113,33 @@ void InnerDelete(T& data, SplayTree<T>* root){
 template <class T>
 SplayTree<T>* Splay(T& itemToFind, SplayTree<T>* root){
     ///stop condition - root is null or holds the item.
-    if(root == nullptr || root->data == itemToFind) return root;
+    if(root == NULL || root->getRootData() == itemToFind) return root;
 
     ///check if item is in the left subTree.
-    if(root->data > itemToFind){
-        if(root->left == nullptr) return root;
-        if(root->left->data > itemToFind){ ///left->left
-            root->left->left = Splay(itemToFind, root->left->left);
+    if(root->getRootData() > itemToFind){
+        if(root->GetLeft() == NULL) return root;
+        if(root->GetLeft()->getRootData() > itemToFind){ ///left->left
+            root->GetLeft()->SetLeft(Splay(itemToFind, root->GetLeft()->GetLeft()));
             root = RotateRight(root);
-        }else if(root->data < itemToFind){ ///left->right
-            root->left->right = Splay(itemToFind, root->left->right);
-            if(root->left->right != nullptr){
-                root->left= RotateLeft(root->left);
+        }else if(root->getRootData() < itemToFind){ ///left->right
+            root->GetLeft()->SetRight(Splay(itemToFind, root->GetLeft()->GetRight()));
+            if(root->GetLeft()->GetRight() != NULL){
+                root->SetLeft(RotateLeft(root->GetLeft()));
             }
         }
-        return (root->left == nullptr)? root : RotateRight(root->left);
+        return (root->GetLeft() == NULL)? root : RotateRight(root->GetLeft());
     }else{ //item is in the right subTree.
-        if(root->right == nullptr) return root;
-        if(root->right->data > itemToFind){ ///right->left
-            root->right->left = Splay(itemToFind, root->right->left);
-            if(root->right->left != nullptr){
-                root->right = RotateLeft(root->right);
+        if(root->GetRight() == NULL) return root;
+        if(root->GetRight()->getRootData() > itemToFind){ ///right->left
+            root->GetRight()->SetLeft(Splay(itemToFind, root->GetRight()->GetLeft()));
+            if(root->GetRight()->GetLeft() != NULL){
+                root->SetRight(RotateLeft(root->GetRight()));
             }
-        } else if(root->right->data < itemToFind){ ///right->right
-            root->right->right = Splay(itemToFind, root->right->right);
+        } else if(root->GetRight()->getRootData() < itemToFind){ ///right->right
+            root->GetRight()->SetRight(Splay(itemToFind, root->GetRight()->GetRight()));
             root = RotateLeft(root);
         }
-        return (root->right == nullptr)? root : RotateLeft(root);
+        return (root->GetRight() == NULL)? root : RotateLeft(root);
     }
 }
 
@@ -151,9 +151,9 @@ SplayTree<T>* Splay(T& itemToFind, SplayTree<T>* root){
  */
 template <class T>
 SplayTree<T>* RotateRight(SplayTree<T>* x){
-    SplayTree<T>* y = x->left;
-    x->left = y->right;
-    y->right = x;
+    SplayTree<T>* y = x->GetLeft();
+    x->SetLeft(y->GetRight());
+    y->SetRight(x);
     return y;
 }
 
@@ -165,9 +165,9 @@ SplayTree<T>* RotateRight(SplayTree<T>* x){
  */
 template <class T>
 SplayTree<T>* RotateLeft(SplayTree<T>* x){
-    SplayTree<T>* y = x->right;
-    x->right = y->left;
-    y->left = x;
+    SplayTree<T>* y = x->GetRight();
+    x->SetRight(y->GetLeft());
+    y->SetLeft(x);
     return y;
 }
 
@@ -179,10 +179,10 @@ SplayTree<T>* RotateLeft(SplayTree<T>* x){
  */
 template <class T>
 T& getMaxElement(SplayTree<T>* root){
-    if(root->right == nullptr){
-        return root->data;
+    if(root->GetRight() == NULL){
+        return root->getRootData();
     }else{
-        return getMaxElement(root->right);
+        return getMaxElement(root->GetRight());
     }
 }
 
@@ -194,25 +194,25 @@ T& getMaxElement(SplayTree<T>* root){
 template <class T>
 void SplayTree<T>::InOrder(Func f, bool reverse){
     if(reverse){
-        if(this->right != nullptr) this->right->InOrder(f);
+        if(this->right != NULL) this->right->InOrder(f);
         f(this->data);
-        if(this->left != nullptr) this->left->InOrder(f);
+        if(this->left != NULL) this->left->InOrder(f);
     }
-    if(this->left != nullptr) this->left->InOrder(f);
+    if(this->left != NULL) this->left->InOrder(f);
     f(this->data);
-    if(this->right != nullptr) this->right->InOrder(f);
+    if(this->right != NULL) this->right->InOrder(f);
 }
 
 template <class T>
 void SplayTree<T>::PreOrder(Func f){
     f(this->data);
-    if(this->left != nullptr) this->left->InOrder(f);
-    if(this->right != nullptr) this->right->InOrder(f);
+    if(this->left != NULL) this->left->InOrder(f);
+    if(this->right != NULL) this->right->InOrder(f);
 }
 
 template <class T>
 void SplayTree<T>::PostOrder(Func f){
-    if(this->left != nullptr) this->left->InOrder(f);
-    if(this->right != nullptr) this->right->InOrder(f);
+    if(this->left != NULL) this->left->InOrder(f);
+    if(this->right != NULL) this->right->InOrder(f);
     f(this->data);
 }

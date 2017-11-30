@@ -3,6 +3,7 @@
 #define EX1_UTILITY_H
 
 #include <exception>
+#include <cstdio>
 
 typedef int TrainerID;
 typedef int GladiatorID;
