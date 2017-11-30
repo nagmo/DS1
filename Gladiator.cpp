@@ -1,12 +1,7 @@
-//
-// Created by Nevo Agmon on 27/11/2017.
-//
 
 #include "Gladiator.h"
 Gladiator::Gladiator(GladiatorID gladiatorID, Trainer* trainer,  Level level, bool subOrderFlag) :
         id(gladiatorID), level(level), trainer(trainer), subOrderFlag(subOrderFlag) {}
-
-Gladiator::~Gladiator() = default;
 
 Gladiator::Gladiator(const Gladiator& gladiator) :
         id(gladiator.id), trainer(gladiator.trainer),

@@ -7,6 +7,19 @@
 
 template <class T>
 class SplayTree;
+template <class T>
+void InnerDelete(T& data, SplayTree<T>* root);
+template <class T>
+T& InnerFind(T& data, SplayTree<T>* root);
+
+/**
+ * insert element to the tree, the elemnt will be at the root.
+ * @tparam T
+ * @param newData
+ * @param root
+ */
+template <class T>
+void InnerInsert(T& newData, SplayTree<T>* root);
 
 /*************************************************************************
  * this class wraps the splay tree in order to make all tree operations
@@ -24,21 +37,21 @@ public:
 
     T& getRootData(){ return tree->getRootData(); };
 
-    T& Find(T& data){ return InnerFind(data, tree); };
+    T& Find(T& data){ return InnerFind<T>(data, tree); };
 
     void Insert(T& newData){
-        InnerInsert(newData, tree);
+        InnerInsert<T>(newData, tree);
         numOfItems++;
     };
 
     void Delete(T& data){
-        InnerDelete(data, tree);
+        InnerDelete<T>(data, tree);
         numOfItems--;
     };
 
     int size(){ return numOfItems; }
 
-    T& getMaxElement(){ return getMaxElement(); }
+    T& GetMaxElement(){ return getMaxElement(tree); }
 
     typedef void (*Func)(T&);
 
@@ -128,20 +141,7 @@ private:
 
 };
 
-template <class T>
-T& InnerFind(T& data, SplayTree<T>* root);
 
-/**
- * insert element to the tree, the elemnt will be at the root.
- * @tparam T
- * @param newData
- * @param root
- */
-template <class T>
-void InnerInsert(T& newData, SplayTree<T>* root);
-
-template <class T>
-void InnerDelete(T& data, SplayTree<T>* root);
 
 /**
  * function to splay tree. will be used in find, insert, delete.

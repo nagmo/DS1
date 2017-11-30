@@ -105,7 +105,7 @@ void ComodosDS::FreeGladiator(GladiatorID gladID){
     Trainer currTrainer = trainers.Find(tempTrainer);
     //remove gladiator from trainer
     //update the bestGlad should happen in the remove function
-    currTrainer.GetGladiatorsTree().DeleteGladiator(tempGlad);
+    currTrainer.GetGladiatorsTree()->DeleteGladiator(tempGlad);
 }
 /**
  * update the level of a Gladiator
@@ -124,8 +124,8 @@ void ComodosDS::LevelUp(GladiatorID gladID, LevelIncrease levelIncrease){
         //update gladiator level
         currGlad.IncreaseLevel(levelIncrease);
         //remove and inset from trainers tree
-        currGlad.GetTrainer()->GetGladiatorsTree().DeleteGladiator(tempGlad);
-        currGlad.GetTrainer()->GetGladiatorsTree().AddGladiator(currGlad);
+        currGlad.GetTrainer()->GetGladiatorsTree()->DeleteGladiator(tempGlad);
+        currGlad.GetTrainer()->GetGladiatorsTree()->AddGladiator(currGlad);
     }
     catch (TreeElementNotInTreeException&){
         throw FailureException();
@@ -135,7 +135,7 @@ void ComodosDS::LevelUp(GladiatorID gladID, LevelIncrease levelIncrease){
 GladiatorID ComodosDS::GetTopGladiator(TrainerID trainerID){
     if(trainerID == 0) throw InvalidInputException();
     if(trainerID < 0){
-        return gladiators.getMaxElement().GetGladiatorID();
+        return gladiators.GetMaxElement().GetGladiatorID();
     }
     //search for trainer
     //create an instant of a trainer
@@ -157,10 +157,19 @@ GladByLevel ComodosDS::GetAllGladiatorsByLevel(TrainerID trainerID){
     //get all glads
     if(trainerID<0){
         gladByLevel.SetNumOfGlads(this->gladiatorsByLevel.size());
-        this->gladiatorsByLevel.InOrder(gladByLevel.operator(), true);
+        this->gladiatorsByLevel.InOrder((SplayTreeWrapper<Gladiator>::Func)&gladByLevel, true);
+        return gladByLevel;
     }
     //get by trainer
-    else{}
+    Trainer tempTrainer = Trainer(trainerID);
+    try{
+        Trainer currTrainer = trainers.Find(tempTrainer);
+        gladByLevel.SetNumOfGlads(currTrainer.GetGladiatorsTree()->size());
+        currTrainer.GetGladiatorsTree()->InOrder((SplayTreeWrapper<Gladiator>::Func)&gladByLevel, true);
+        return gladByLevel;
+    }catch (TreeElementNotInTreeException&){
+        throw FailureException();
+    }
 }
 
 /**
@@ -185,8 +194,8 @@ void ComodosDS::UpgradeGladiator(GladiatorID currGladID, GladiatorID newGladID){
         //update the trainers tree
         Trainer* currTrainer = newGlad.GetTrainer();
         //delete the glad from its trainer
-        currTrainer->GetGladiatorsTree().DeleteGladiator(tempGlad);
-        currTrainer->GetGladiatorsTree().AddGladiator((newGlad));
+        currTrainer->GetGladiatorsTree()->DeleteGladiator(tempGlad);
+        currTrainer->GetGladiatorsTree()->AddGladiator((newGlad));
     }
     catch (TreeElementNotInTreeException&){
         throw InvalidInputException();
@@ -212,7 +221,7 @@ void GladiatorTree::AddGladiator(Gladiator& gladiator) {
 
 void GladiatorTree::DeleteGladiator(Gladiator& gladiator){
     if(gladiator.GetGladiatorID() == bestGladiator.GetGladiatorID()){
-        bestGladiator = Gladiator(this->getMaxElement());
+        bestGladiator = Gladiator(this->GetMaxElement());
     }
     Delete(gladiator);
 

@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 3.8)
 project(EX1)
 
 set(CMAKE_CXX_STANDARD 98)
-set(SOURCE_FILES main.cpp SplayTree.cpp Trainer.cpp Gladiator.cpp
-        ComodosDS.cpp library1.cpp utility.h SplitAndSortTree.h GladByID.h)
 
-add_executable(EX1 ${SOURCE_FILES})
+file(GLOB HEADERS ./*.h)
+set(SOURCE_FILES main.cpp ComodosDS.cpp Gladiator.cpp library1.cpp
+        SplayTree.cpp Trainer.cpp)
+
+add_executable(EX1 ${SOURCE_FILES} ${HEADERS})

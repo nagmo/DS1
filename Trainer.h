@@ -20,8 +20,9 @@ public:
     explicit Trainer(TrainerID);
 
     /**
-    * default destructor is fine here.
+    * default destructor is not fine here.
     */
+    ~Trainer();
 
     /**
     * add gladiator to the tree. check if it the best so far,
@@ -40,7 +41,7 @@ public:
     * return gladiators tree
     * @return
     */
-    GladiatorTree& GetGladiatorsTree();
+    GladiatorTree* GetGladiatorsTree();
 
     /**
     * return trainer's id
@@ -52,7 +53,7 @@ private:
 
     TrainerID id;
     Gladiator bestGladiator;
-    GladiatorTree gladiators;
+    GladiatorTree* gladiators;
 
 };
 
