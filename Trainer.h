@@ -19,10 +19,35 @@ public:
     * @param id
     */
     explicit Trainer(TrainerID);
+
+    /**
+    * default destructor is fine here.
+    */
     ~Trainer() = default;
+
+    /**
+    * add gladiator to the tree. check if it the best so far,
+    * if so update bestGladiator.
+    * @param newGladiator
+    */
     void AddGladiator(Gladiator&);
+
+    /**
+    * return best gladiator
+    * @return
+    */
     Gladiator& GetBestGladiator();
+
+    /**
+    * return gladiators tree
+    * @return
+    */
     GladiatorTree& GetGladiatorsTree();
+
+    /**
+    * return trainer's id
+    * @return
+    */
     TrainerID GetID();
 
 private:

@@ -1,13 +1,24 @@
 
+#include <new>
 #include "library1.h"
 #include "utility.h"
+#include "ComodosDS.h"
 
 /** Description:   Initiates the data structure.
 * Input:         DS - A pointer to the data structure.
 * Output:        None.
 * Return Values: A pointer to a new instance of the data structure - as a void* pointer.
 */
-void* Init();
+void* Init(){
+    ComodosDS* ds;
+    try {
+        ds = new ComodosDS();
+    }
+    catch(std::bad_alloc&){
+        return NULL;
+    }
+    return (void*)ds;
+}
 
 /** Description:   Adds a new trainer.
 * Input:         DS - A pointer to the data structure.
@@ -18,7 +29,20 @@ void* Init();
 *                FAILURE - If trainerID is already in the DS.
 *                SUCCESS - Otherwise.
 */
-StatusType AddTrainer(void *DS, int trainerID);
+StatusType AddTrainer(void *DS, int trainerID){
+    if(!DS || trainerID <= 0) return INVALID_INPUT;
+    try {
+        ((ComodosDS*)DS)->AddTrainer(trainerID);
+    }catch (InvalidInputException&){
+        return INVALID_INPUT;
+    }catch (FailureException&){
+        return FAILURE;
+    }catch (std::bad_alloc&){
+        return ALLOCATION_ERROR;
+    }
+    return SUCCESS;
+
+}
 
 /** Description:   Adds a new gladiator to the system.
 * Input:         DS - A pointer to the data structure.
@@ -31,7 +55,20 @@ StatusType AddTrainer(void *DS, int trainerID);
 *                FAILURE - If gladiatorID is already in the DS, or trainerID isn't in the DS.
 *                SUCCESS - Otherwise.
 */
-StatusType BuyGladiator(void *DS, int gladiatorID, int trainerID, int level);
+StatusType BuyGladiator(void *DS, int gladiatorID,
+                        int trainerID, int level){
+    if(!DS) return INVALID_INPUT;
+    try {
+        ((ComodosDS*)DS)->BuyGladiator(gladiatorID,trainerID,level);
+    }catch (InvalidInputException&){
+        return INVALID_INPUT;
+    }catch (FailureException&){
+        return FAILURE;
+    }catch (std::bad_alloc&){
+        return ALLOCATION_ERROR;
+    }
+    return SUCCESS;
+}
 
 /** Description:   Removes an existing gladiator.
 * Input:         DS - A pointer to the data structure.
@@ -42,7 +79,19 @@ StatusType BuyGladiator(void *DS, int gladiatorID, int trainerID, int level);
 *                FAILURE - If gladiatorID isn't in the DS.
 *                SUCCESS - Otherwise.
 */
-StatusType FreeGladiator(void *DS, int gladiatorID);
+StatusType FreeGladiator(void *DS, int gladiatorID){
+    if(!DS) return INVALID_INPUT;
+    try {
+        ((ComodosDS*)DS)->FreeGladiator(gladiatorID);
+    }catch (InvalidInputException&){
+        return INVALID_INPUT;
+    }catch (FailureException&){
+        return FAILURE;
+    }catch (std::bad_alloc&){
+        return ALLOCATION_ERROR;
+    }
+    return SUCCESS;
+}
 
 /** Description:   Increases the level of a gladiator.
 * Input:         DS - A pointer to the data structure.
@@ -54,7 +103,19 @@ StatusType FreeGladiator(void *DS, int gladiatorID);
 *                FAILURE - If gladiatorID isn't in the DS.
 *                SUCCESS - Otherwise.
 */
-StatusType LevelUp(void *DS, int gladiatorID, int levelIncrease);
+StatusType LevelUp(void *DS, int gladiatorID, int levelIncrease){
+    if(!DS) return INVALID_INPUT;
+    try {
+        ((ComodosDS*)DS)->LevelUp(gladiatorID,levelIncrease);
+    }catch (InvalidInputException&){
+        return INVALID_INPUT;
+    }catch (FailureException&){
+        return FAILURE;
+    }catch (std::bad_alloc&){
+        return ALLOCATION_ERROR;
+    }
+    return SUCCESS;
+}
 
 /** Description:   Upgrades a gladiator, updating his ID, while maintaining his level.
 * Input:         DS - A pointer to the data structure.
