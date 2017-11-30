@@ -41,8 +41,8 @@ public:
 
     typedef void (*Func)(T&);
 
-    void InOrder(Func f){
-        tree->InOrder(f);
+    void InOrder(Func f, bool reverse = false){
+        tree->InOrder(f, reverse);
     }
 
     void PreOrder(Func f){
@@ -103,7 +103,7 @@ public:
     * @tparam T
     * @param f
     */
-    void InOrder(Func f);
+    void InOrder(Func f, bool reverse = false);
     void PreOrder(Func f);
     void PostOrder(Func f);
 

@@ -18,6 +18,7 @@ ComodosDS::ComodosDS() : trainers(TrainerTree()), gladiators(GladiatorTree()) {}
 void ComodosDS::AddTrainer(TrainerID id){
     if(id <= 0) throw InvalidInputException();
     //not inside try to let exception get to 'C' function
+    //todo: why not in try? if exception is not cathced it will float up.
     Trainer newTrainer = Trainer(id);
     //should throw an exception in case of an error
     try{
@@ -139,7 +140,18 @@ GladiatorID ComodosDS::GetTopGladiator(TrainerID trainerID){
     };
 }
 
-GladByLevel GetAllGladiatorsByLevel(TrainerID);
+GladByLevel ComodosDS::GetAllGladiatorsByLevel(TrainerID trainerID){
+    if(trainerID == 0) throw InvalidInputException();
+    GladByLevel gladByLevel;
+    //get all glads
+    if(trainerID<0){
+        gladByLevel.SetNumOfGlads(this->gladiatorsByLevel.size());
+        this->gladiatorsByLevel.InOrder(gladByLevel, true);
+    }
+    //get by trainer
+    else{}
+}
+
 /**
  * change gladiator Id
  * update it in the glads tree and in the trainers tree

@@ -192,7 +192,12 @@ T& getMaxElement(SplayTree<T>* root){
  * @param f
  */
 template <class T>
-void SplayTree<T>::InOrder(Func f){
+void SplayTree<T>::InOrder(Func f, bool reverse){
+    if(reverse){
+        if(this->right != nullptr) this->right->InOrder(f);
+        f(this->data);
+        if(this->left != nullptr) this->left->InOrder(f);
+    }
     if(this->left != nullptr) this->left->InOrder(f);
     f(this->data);
     if(this->right != nullptr) this->right->InOrder(f);

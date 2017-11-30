@@ -6,14 +6,15 @@
 #include "SplayTree.h"
 #include "Gladiator.h"
 #include "Trainer.h"
+#include "GladByID.h"
 
 using std::exception;
 
 class GladiatorTree : SplayTreeWrapper<Gladiator>{
 public:
-    //todo: Yuval - I have chenged the destructor to default.
     GladiatorTree();
-    ~GladiatorTree() = default;
+    //todo: Yuval - I think we should just ignore the destructor. and the "SplayTreeWrapper<Gladiator>"'s D'tor will be used.
+    //~GladiatorTree() = default;
     void UpdateBestGladiator(Gladiator&);
     void AddGladiator(Gladiator&);
     void DeleteGladiator(Gladiator&);
@@ -27,7 +28,8 @@ class TrainerTree : SplayTreeWrapper<Trainer>{
 public:
     //todo: Yuval - here too.
     TrainerTree();
-    ~TrainerTree() = default;
+    //~TrainerTree() = default;
+    //todo: yuval - why not use parent insert and delete? no special action needed
     void DeleteGladiator(Gladiator&);
     void AddTrainer(Trainer&);
 private:

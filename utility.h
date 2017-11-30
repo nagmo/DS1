@@ -11,10 +11,6 @@ typedef int StimulantCode;
 typedef int StimulantFactor;
 typedef int LevelIncrease;
 
-struct GladByLevel{
-    int numOfGlads;
-    int* gladiators;
-};
 
 class LevelsNode{
 public:
