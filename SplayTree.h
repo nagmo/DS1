@@ -37,6 +37,8 @@ public:
 
     int size(){ return numOfItems; }
 
+    T& getMaxElement(){ return getMaxElement(); }
+
     typedef void (*Func)(T&);
 
     void InOrder(Func f){

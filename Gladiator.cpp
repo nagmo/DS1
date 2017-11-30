@@ -47,3 +47,4 @@ bool Gladiator::operator<(Gladiator& gladiator){
 bool Gladiator::operator>(Gladiator& gladiator){
     return !(*this < gladiator || *this == gladiator);
 }
+

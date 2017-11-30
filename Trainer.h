@@ -5,15 +5,21 @@
 #include "utility.h"
 #include "Gladiator.h"
 #include "SplayTree.h"
+#include "ComodosDS.h"
+//todo: Yuval - can we include comodos here? isn't it an inclusion circle?
+
 class GladiatorTree;
 
 class Trainer {
 
 public:
 
-    Trainer(TrainerID);
-    ~Trainer();
-    //remeber to update the bestGlad of a trainer
+    /**
+    * creates a dummy "bestGladiator" with an id of -1 and level of -1.
+    * @param id
+    */
+    explicit Trainer(TrainerID);
+    ~Trainer() = default;
     void AddGladiator(Gladiator&);
     Gladiator& GetBestGladiator();
     GladiatorTree& GetGladiatorsTree();
@@ -23,7 +29,7 @@ private:
 
     TrainerID id;
     Gladiator bestGladiator;
-    GladiatorTree& gladiators;
+    GladiatorTree gladiators;
 
 };
 

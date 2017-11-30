@@ -2,14 +2,14 @@
 #include "library1.h"
 #include "utility.h"
 
-/* Description:   Initiates the data structure.
+/** Description:   Initiates the data structure.
 * Input:         DS - A pointer to the data structure.
 * Output:        None.
 * Return Values: A pointer to a new instance of the data structure - as a void* pointer.
 */
 void* Init();
 
-/* Description:   Adds a new trainer.
+/** Description:   Adds a new trainer.
 * Input:         DS - A pointer to the data structure.
 *                trainerID - The ID of the trainer to add.
 * Output:        None.
@@ -20,7 +20,7 @@ void* Init();
 */
 StatusType AddTrainer(void *DS, int trainerID);
 
-/* Description:   Adds a new gladiator to the system.
+/** Description:   Adds a new gladiator to the system.
 * Input:         DS - A pointer to the data structure.
 *                gladiatorID - ID of the gladiator to add.
 *                trainerID - The ID of the gladiator's trainer
@@ -33,7 +33,7 @@ StatusType AddTrainer(void *DS, int trainerID);
 */
 StatusType BuyGladiator(void *DS, int gladiatorID, int trainerID, int level);
 
-/* Description:   Removes an existing gladiator.
+/** Description:   Removes an existing gladiator.
 * Input:         DS - A pointer to the data structure.
 *                gladiatorID - The ID of the gladiator to remove.
 * Output:        None.
@@ -44,7 +44,7 @@ StatusType BuyGladiator(void *DS, int gladiatorID, int trainerID, int level);
 */
 StatusType FreeGladiator(void *DS, int gladiatorID);
 
-/* Description:   Increases the level of a gladiator.
+/** Description:   Increases the level of a gladiator.
 * Input:         DS - A pointer to the data structure.
 *                gladiatorID - The ID of the gladiator.
 *		            levelIncrease - The increase in level.
@@ -56,7 +56,7 @@ StatusType FreeGladiator(void *DS, int gladiatorID);
 */
 StatusType LevelUp(void *DS, int gladiatorID, int levelIncrease);
 
-/* Description:   Upgrades a gladiator, updating his ID, while maintaining his level.
+/** Description:   Upgrades a gladiator, updating his ID, while maintaining his level.
 * Input:         DS - A pointer to the data structure.
 *                gladiatorID - The original ID of the gladiator.
 *                upgradedID - The new ID of the gladiator.
@@ -68,7 +68,7 @@ StatusType LevelUp(void *DS, int gladiatorID, int levelIncrease);
 */
 StatusType UpgradeGladiator(void *DS, int gladiatorID, int upgradedID);
 
-/* Description:   Returns the gladiator with the highest level from trainerID
+/** Description:   Returns the gladiator with the highest level from trainerID
 * 			If trainerID < 0, returns the top gladiator in the entire DS.
 * Input:         DS - A pointer to the data structure.
 *                trainerID - The trainer that we'd like to get the data for.
@@ -79,7 +79,7 @@ StatusType UpgradeGladiator(void *DS, int gladiatorID, int upgradedID);
 */
 StatusType GetTopGladiator(void *DS, int trainerID, int *gladiatorID);
 
-/* Description:   Returns all the gladiators from trainerID sorted by their level.
+/** Description:   Returns all the gladiators from trainerID sorted by their level.
 *           			If trainerID < 0, returns all the gladiators in the entire DS sorted by their level.
 * Input:         DS - A pointer to the data structure.
 *                trainerID - The trainer that we'd like to get the data for.
@@ -92,7 +92,7 @@ StatusType GetTopGladiator(void *DS, int trainerID, int *gladiatorID);
 */
 StatusType GetAllGladiatorsByLevel(void *DS, int trainerID, int **gladiators, int *numOfGladiator);
 
-/* Description:   Updates the level of the gladiators where gladiatorID % stimulantCode == 0.
+/** Description:   Updates the level of the gladiators where gladiatorID % stimulantCode == 0.
 * 			          For each matching gladiator, multiplies its level by stimulantFactor.
 * Input:         DS - A pointer to the data structure.
 *                stimulantCode - The basis that the stimulant works on
@@ -105,7 +105,7 @@ StatusType GetAllGladiatorsByLevel(void *DS, int trainerID, int **gladiators, in
 StatusType UpdateLevels(void *DS, int stimulantCode, int stimulantFactor);
 
 
-/* Description:   Quits and deletes the database.
+/** Description:   Quits and deletes the database.
 *                DS should be set to NULL.
 * Input:         DS - A pointer to the data structure.
 * Output:        None.

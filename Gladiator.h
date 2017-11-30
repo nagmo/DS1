@@ -12,6 +12,9 @@ public:
     Gladiator(GladiatorID, Trainer* = nullptr, Level = 0);
     ~Gladiator();
     Gladiator(const Gladiator&);
+
+    Gladiator();
+
     Level GetLevel();
     GladiatorID GetGladiatorID();
     Trainer* GetTrainer();
@@ -19,6 +22,7 @@ public:
      * increase the level by levelIncrease
      */
     void IncreaseLevel(LevelIncrease);
+
     /**
      * two gladiators are equal if have the same id
      * @param gladiator

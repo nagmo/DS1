@@ -11,8 +11,9 @@ using std::exception;
 
 class GladiatorTree : SplayTreeWrapper<Gladiator>{
 public:
+    //todo: Yuval - I have chenged the destructor to default.
     GladiatorTree();
-    ~GladiatorTree();
+    ~GladiatorTree() = default;
     void UpdateBestGladiator(Gladiator&);
     void AddGladiator(Gladiator&);
     void DeleteGladiator(Gladiator&);
@@ -24,8 +25,9 @@ private:
 
 class TrainerTree : SplayTreeWrapper<Trainer>{
 public:
+    //todo: Yuval - here too.
     TrainerTree();
-    ~TrainerTree();
+    ~TrainerTree() = default;
     void DeleteGladiator(Gladiator&);
     void AddTrainer(Trainer&);
 private:

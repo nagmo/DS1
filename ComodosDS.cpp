@@ -1,10 +1,8 @@
-//
-// Created by Nevo Agmon on 27/11/2017.
-//
 
 #include "ComodosDS.h"
 
-//todo: wrap wrappertree with gladiator and save max glad, override insert override delete
+//todo: wrap wrappertree with gladiator and save max glad,override insert override delete
+//todo: Yuval -> is it done? the wrappers are in the header..
 
 /**
  * use to create a new instant of ComodosDS
@@ -177,8 +175,6 @@ void UpdateLevels(StimulantCode, StimulantFactor);
 
 GladiatorTree::GladiatorTree() : SplayTreeWrapper<Gladiator>(), bestGladiator(Gladiator(1)){}
 
-GladiatorTree::~GladiatorTree(){}
-
 void GladiatorTree::UpdateBestGladiator(Gladiator& gladiator){
     bestGladiator = Gladiator(gladiator);
 }
@@ -193,9 +189,8 @@ void GladiatorTree::AddGladiator(Gladiator& gladiator) {
 
 void GladiatorTree::DeleteGladiator(Gladiator& gladiator){
     if(gladiator.GetGladiatorID() == bestGladiator.GetGladiatorID()){
-        //todo: Nevo - How should I use getMaxElement? I need to send it the root NODE but dont have a suitable function to do it
-        //todo: Nevo - also, there are some compilation errors about inaccessible fields in the Trees classes
-        bestGladiator = Gladiator(getMaxElement(this.splayTree));
+        //todo: Yuval - fixed.
+        bestGladiator = Gladiator(this->getMaxElement());
     }
     Delete(gladiator);
 
