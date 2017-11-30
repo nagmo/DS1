@@ -3,14 +3,14 @@
 //
 
 #include "Gladiator.h"
-Gladiator::Gladiator(GladiatorID gladiatorID, Trainer* trainer,  Level level) :
-        id(gladiatorID), level(level), trainer(trainer) {}
+Gladiator::Gladiator(GladiatorID gladiatorID, Trainer* trainer,  Level level, bool subOrderFlag) :
+        id(gladiatorID), level(level), trainer(trainer), subOrderFlag(subOrderFlag) {}
 
 Gladiator::~Gladiator() = default;
 
-Gladiator::Gladiator(const Gladiator& gladiator) : id(gladiator.id),
-                                                   trainer(gladiator.trainer), level(gladiator.level){
-}
+Gladiator::Gladiator(const Gladiator& gladiator) :
+        id(gladiator.id), trainer(gladiator.trainer),
+        level(gladiator.level), subOrderFlag(gladiator.subOrderFlag) {}
 
 Level Gladiator::GetLevel(){
     return level;
@@ -29,6 +29,9 @@ void Gladiator::IncreaseLevel(LevelIncrease levelIncrease){
  * @return
  */
 bool Gladiator::operator==(Gladiator& gladiator){
+    if(subOrderFlag){
+        return level == gladiator.level ? id == gladiator.id : false;
+    }
     return id == gladiator.id;
 }
 /**
@@ -37,6 +40,9 @@ bool Gladiator::operator==(Gladiator& gladiator){
  * @return
  */
 bool Gladiator::operator<(Gladiator& gladiator){
+    if(subOrderFlag){
+        return level < gladiator.level ? id > gladiator.id : false;
+    }
     return id < gladiator.id;
 }
 /**
@@ -48,3 +54,6 @@ bool Gladiator::operator>(Gladiator& gladiator){
     return !(*this < gladiator || *this == gladiator);
 }
 
+void Gladiator::SetFlag(bool flag) {
+    subOrderFlag = flag;
+}

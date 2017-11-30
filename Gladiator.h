@@ -9,11 +9,9 @@ class Gladiator {
 
 public:
 
-    Gladiator(GladiatorID, Trainer* = nullptr, Level = 0);
+    Gladiator(GladiatorID, Trainer* = nullptr, Level = 0, bool subOrderFlag = false);
     ~Gladiator();
     Gladiator(const Gladiator&);
-
-    Gladiator();
 
     Level GetLevel();
     GladiatorID GetGladiatorID();
@@ -42,8 +40,11 @@ public:
      */
     bool operator>(Gladiator& gladiator);
 
+    void SetFlag(bool);
+
 private:
 
+    bool subOrderFlag;
     GladiatorID id;
     Level level;
     Trainer* trainer;
