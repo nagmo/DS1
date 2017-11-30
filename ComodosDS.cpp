@@ -1,4 +1,5 @@
 
+#include <iostream>
 #include "ComodosDS.h"
 
 /**
@@ -56,6 +57,15 @@ void ComodosDS:: BuyGladiator(GladiatorID gladID, TrainerID trainID, Level level
         catch (TreeElementAllreadyInTreeException&){
             throw FailureException();
         }
+        try{
+            newGlad.SetFlag(true);
+            gladiatorsByLevel.AddGladiator(newGlad);
+        }
+        catch (TreeElementAllreadyInTreeException&){
+            newGlad.SetFlag(false);
+            gladiators.DeleteGladiator(newGlad);
+            throw FailureException();
+        }
         currTrainer.AddGladiator(newGlad);
     }
         //case of trainer doesnt exist
@@ -79,6 +89,13 @@ void ComodosDS::FreeGladiator(GladiatorID gladID){
     }
     catch (TreeElementNotInTreeException&){
         throw FailureException();
+    }
+    try{
+        tempGlad.SetFlag(true);
+        gladiatorsByLevel.DeleteGladiator(tempGlad);
+    }
+    catch (TreeElementNotInTreeException&){
+        std::cout << " Ha Ha " << std::endl;
     }
     //remove glad from trainer
     //create an instant of trainer
@@ -136,11 +153,11 @@ GladiatorID ComodosDS::GetTopGladiator(TrainerID trainerID){
 
 GladByLevel ComodosDS::GetAllGladiatorsByLevel(TrainerID trainerID){
     if(trainerID == 0) throw InvalidInputException();
-    GladByLevel gladByLevel;
+    GladByLevel gladByLevel = GladByLevel();
     //get all glads
     if(trainerID<0){
         gladByLevel.SetNumOfGlads(this->gladiatorsByLevel.size());
-        this->gladiatorsByLevel.InOrder(gladByLevel, true);
+        this->gladiatorsByLevel.InOrder(gladByLevel.operator(), true);
     }
     //get by trainer
     else{}

@@ -76,6 +76,7 @@ private:
 
     TrainerTree trainers;
     GladiatorTree gladiators;
+    GladiatorTree gladiatorsByLevel;
 };
 
 
