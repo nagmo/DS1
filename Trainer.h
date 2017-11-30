@@ -49,6 +49,18 @@ public:
     */
     TrainerID GetID();
 
+    bool operator==(const Trainer& trainer){
+        return id == trainer.id;
+    }
+
+    bool operator<(const Trainer& trainer){
+        return id < trainer.id;
+    }
+
+    bool operator>(const Trainer& trainer){
+        return !(*this==trainer || *this<trainer);
+    }
+
 private:
 
     TrainerID id;
