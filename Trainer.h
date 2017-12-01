@@ -12,7 +12,6 @@ class GladiatorTree;
 class Trainer {
 
 public:
-    Trainer();
     /**
     * creates a dummy "bestGladiator" with an id of -1 and level of -1.
     * @param id
