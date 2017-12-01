@@ -142,7 +142,6 @@ public:
     };
 
     void Insert(T& newData){
-        T data = T(newData);
         if(tree == NULL) {
             tree = new SplayTree<T>(newData);
             numOfItems = 0;
