@@ -16,8 +16,9 @@ public:
     * creates a dummy "bestGladiator" with an id of -1 and level of -1.
     * @param id
     */
-    explicit Trainer(TrainerID);
+    explicit Trainer(TrainerID, bool = true);
 
+    Trainer(const Trainer&);
     /**
     * default destructor is not fine here.
     */

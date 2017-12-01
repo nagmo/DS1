@@ -142,7 +142,11 @@ public:
     };
 
     void Insert(T& newData){
-        if(tree == NULL) tree = new SplayTree<T>(newData);
+        T data = T(newData);
+        if(tree == NULL) {
+            tree = new SplayTree<T>(newData);
+            numOfItems = 0;
+        }
         else InnerInsert(newData, &tree);
         numOfItems++;
     };
@@ -266,6 +270,8 @@ void InnerDelete(T& data, SplayTree<T>* root){
     root = Splay(data, root);
     if(root->getRootData() == data){
         delete root->getRootDataPointer();
+        //todo: Nevo - ther is a problem when root->GetLeft() is NULL
+        //todo: ... I dont want to mess this up so I let you do it
         T& maxElementInLeft = getMaxElement(root->GetLeft());
         SplayTree<T>* right = root->GetRight();
         root->SetLeft(Splay(maxElementInLeft, root->GetLeft()));

@@ -43,7 +43,7 @@ void ComodosDS:: BuyGladiator(GladiatorID gladID, TrainerID trainID, Level level
     //handle errors
     if(gladID <= 0 || trainID <= 0 || level <= 0) throw InvalidInputException();
     //check if trainer exists
-    Trainer tempTrainer = Trainer(trainID);
+    Trainer tempTrainer = Trainer(trainID, false);
     //find the trainer
     //if doesnt exist, would throw FailureException, remove gladiator from glad tree
     try{
@@ -68,10 +68,18 @@ void ComodosDS:: BuyGladiator(GladiatorID gladID, TrainerID trainID, Level level
             gladiators.DeleteGladiator(newGlad);
             throw FailureException();
         }
-        currTrainer.AddGladiator(newGlad);
+        try{
+            currTrainer.AddGladiator(newGlad);
+        }
+        catch(TreeElementAllreadyInTreeException&){
+            gladiatorsByLevel.DeleteGladiator(newGlad);
+            newGlad.SetFlag(true);
+            gladiators.DeleteGladiator(newGlad);
+            throw FailureException();
+        }
     }
         //case of trainer doesnt exist
-    catch (TreeElementNotInTreeException&){
+    catch (TreeElementNotInTreeException&) {
         throw FailureException();
     }
 }
@@ -222,11 +230,10 @@ void GladiatorTree::AddGladiator(Gladiator& gladiator) {
 }
 
 void GladiatorTree::DeleteGladiator(Gladiator& gladiator){
+    tree.Delete(gladiator);
     if(gladiator.GetGladiatorID() == bestGladiator.GetGladiatorID()){
         bestGladiator = Gladiator(tree.GetMaxElement());
     }
-    tree.Delete(gladiator);
-
 }
 
 SplayTreeWrapper<Gladiator>& GladiatorTree::GetGladiatorsTree(){

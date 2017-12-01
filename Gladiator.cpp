@@ -24,9 +24,6 @@ void Gladiator::IncreaseLevel(LevelIncrease levelIncrease){
  * @return
  */
 bool Gladiator::operator==(Gladiator& gladiator){
-    if(subOrderFlag){
-        return level == gladiator.level ? id == gladiator.id : false;
-    }
     return id == gladiator.id;
 }
 /**

@@ -6,8 +6,16 @@
  * creates a dummy "bestGladiator" with an id of -1 and level of -1.
  * @param id
  */
-Trainer::Trainer(TrainerID id) :
+Trainer::Trainer(TrainerID id, bool withGladTree) :
         id(id), bestGladiator(Gladiator(DUMMY, NULL, DUMMY)){
+    if(withGladTree) gladiators = new GladiatorTree();
+    else gladiators = NULL;
+}
+/**
+ * copy constructor, use only for a new trainer (without glads tree)
+ * @param t
+ */
+Trainer::Trainer(const Trainer& t) : id(t.id), bestGladiator(t.bestGladiator){
     gladiators = new GladiatorTree();
 }
 
@@ -21,10 +29,10 @@ Trainer::~Trainer(){
  * @param newGladiator
  */
 void Trainer::AddGladiator(Gladiator &newGladiator) {
+    gladiators->AddGladiator(newGladiator);
     if(newGladiator.GetLevel() > bestGladiator.GetLevel()){
         bestGladiator = Gladiator(newGladiator);
     }
-    gladiators->AddGladiator(newGladiator);
 }
 
 /**
