@@ -10,14 +10,15 @@
 
 using std::exception;
 
-class GladiatorTree : public SplayTreeWrapper<Gladiator>{
+class GladiatorTree{
 public:
     GladiatorTree();
     void UpdateBestGladiator(Gladiator&);
     void AddGladiator(Gladiator&);
     void DeleteGladiator(Gladiator&);
-
+    SplayTreeWrapper<Gladiator>& GetGladiatorsTree();
 private:
+    SplayTreeWrapper<Gladiator> tree;
     Gladiator bestGladiator;
 
 };

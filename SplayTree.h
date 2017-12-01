@@ -137,7 +137,9 @@ public:
 
     T& getRootData(){ return tree->getRootData(); };
 
-    T& Find(T& data){ return InnerFind(data, tree); };
+    T& Find(T& data){
+        return InnerFind(data, &tree);
+    };
 
     void Insert(T& newData){
         if(tree == NULL) tree = new SplayTree<T>(newData);
@@ -230,10 +232,10 @@ T* SplayTree<T>::getRootDataPointer() {
 }
 
 template <class T>
-T& InnerFind(T& data, SplayTree<T>* root){
-    root = Splay(data, root);
-    if(root->getRootData() == data){
-        return root->getRootData();
+T& InnerFind(T& data, SplayTree<T>** root){
+    *root = Splay(data, *root);
+    if((*root)->getRootData() == data){
+        return (*root)->getRootData();
     }else{
         throw TreeElementNotInTreeException();
     }
