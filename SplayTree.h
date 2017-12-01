@@ -141,7 +141,7 @@ public:
 
     void Insert(T& newData){
         if(tree == NULL) tree = new SplayTree<T>(newData);
-        else InnerInsert(newData, tree);
+        else InnerInsert(newData, &tree);
         numOfItems++;
     };
 
@@ -246,16 +246,16 @@ T& InnerFind(T& data, SplayTree<T>* root){
  * @param root
  */
 template <class T>
-void InnerInsert(T& newData, SplayTree<T>* root) {
-    root = Splay(newData, root);
-    if(root->getRootData() == newData)
+void InnerInsert(T& newData, SplayTree<T>** root) {
+    *root = Splay(newData, *root);
+    if((*root)->getRootData() == newData)
         throw TreeElementAllreadyInTreeException();
-    else if(root->getRootData() > newData){
-        root = new SplayTree<T>(newData, root->GetLeft(), root);
-        root->GetRight()->SetLeft();
+    else if((*root)->getRootData() > newData){
+        *root = new SplayTree<T>(newData, (*root)->GetLeft(), *root);
+        (*root)->GetRight()->SetLeft();
     }else{
-        root = new SplayTree<T>(newData, root, root->GetRight());
-        root->GetLeft()->SetRight();
+        *root = new SplayTree<T>(newData, *root, (*root)->GetRight());
+        (*root)->GetLeft()->SetRight();
     }
 }
 
