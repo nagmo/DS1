@@ -47,7 +47,7 @@ void ComodosDS:: BuyGladiator(GladiatorID gladID, TrainerID trainID, Level level
     //find the trainer
     //if doesnt exist, would throw FailureException, remove gladiator from glad tree
     try{
-        Trainer currTrainer = trainers.Find(tempTrainer);
+        Trainer& currTrainer = trainers.Find(tempTrainer);
         //add glad to currTrainer
         //create new gladiator
         Gladiator newGlad = Gladiator(gladID, &currTrainer, level);

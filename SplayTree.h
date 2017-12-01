@@ -133,7 +133,7 @@ public:
 
     SplayTreeWrapper() : numOfItems(0), tree(NULL) { }
 
-    ~SplayTreeWrapper(){ delete tree; }
+    virtual ~SplayTreeWrapper(){ delete tree; }
 
     T& getRootData(){ return tree->getRootData(); };
 
