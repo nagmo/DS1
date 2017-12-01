@@ -2,19 +2,20 @@
 #include "Trainer.h"
 
 #define DUMMY -1
-
+Trainer::Trainer() : bestGladiator(Gladiator(DUMMY, NULL, DUMMY)) {
+    gladiators = new GladiatorTree();
+}
 /**
  * creates a dummy "bestGladiator" with an id of -1 and level of -1.
  * @param id
  */
 Trainer::Trainer(TrainerID id) :
-        id(id), bestGladiator(Gladiator(DUMMY, NULL, DUMMY)),
-        gladiators(NULL){
+        id(id), bestGladiator(Gladiator(DUMMY, NULL, DUMMY)){
     gladiators = new GladiatorTree();
 }
 
 Trainer::~Trainer(){
-    delete gladiators;
+    if(gladiators != NULL) delete gladiators;
 }
 
 /**

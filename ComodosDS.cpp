@@ -6,9 +6,8 @@
  * use to create a new instant of ComodosDS
  * use inside try block
  */
-ComodosDS::ComodosDS(){
-    trainers = TrainerTree();
-    gladiators = GladiatorTree();
+ComodosDS::ComodosDS() : trainers(TrainerTree()),
+                         gladiators(GladiatorTree()), gladiatorsByLevel(GladiatorTree()){
 }
 /**
  * use inside try block

@@ -233,7 +233,7 @@ SplayTree<T>::SplayTree(T& data) :
  */
 template <class T>
 SplayTree<T>::~SplayTree(){
-    delete data;
+    if(data != NULL) delete data;
     delete left;
     delete right;
 }
