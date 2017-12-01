@@ -30,13 +30,6 @@ public:
     SplayTree();
 
     /**
-    * constructor with data initiation.
-    * @tparam T
-    * @param data
-    */
-    explicit SplayTree(T&);
-
-    /**
     * destructor deletes data and deletes each subtree recursively.
     * @tparam T
     */
@@ -138,7 +131,7 @@ class SplayTreeWrapper{
 
 public:
 
-    SplayTreeWrapper() : numOfItems(0){ tree = new SplayTree<T>(); }
+    SplayTreeWrapper() : numOfItems(0), tree(NULL) { }
 
     ~SplayTreeWrapper(){ delete tree; }
 
@@ -147,7 +140,8 @@ public:
     T& Find(T& data){ return InnerFind(data, tree); };
 
     void Insert(T& newData){
-        InnerInsert(newData, tree);
+        if(tree == NULL) tree = new SplayTree<T>(newData);
+        else InnerInsert(newData, tree);
         numOfItems++;
     };
 
@@ -212,20 +206,7 @@ SplayTree<T>::SplayTree() : left(NULL), right(NULL), data(NULL) {}
  */
 template <class T>
 SplayTree<T>::SplayTree(T& data, SplayTree<T>* left, SplayTree<T>* right) :
-        left(left), right(right), data(NULL) {
-    this->data = new T(data);
-}
-
-/**
- * constructor with data initiation.
- * @tparam T
- * @param data
- */
-template <class T>
-SplayTree<T>::SplayTree(T& data) :
-        left(NULL), right(NULL), data(NULL) {
-    this->data = new T(data);
-}
+        left(left), right(right), data(new T(data)) {}
 
 /**
  * destructor deletes data and deletes each subtree recursively.
