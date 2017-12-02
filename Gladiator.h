@@ -21,6 +21,7 @@ public:
      */
     void IncreaseLevel(LevelIncrease);
 
+    void MultiplyLevel(LevelIncrease);
     /**
      * two gladiators are equal if have the same id
      * @param gladiator

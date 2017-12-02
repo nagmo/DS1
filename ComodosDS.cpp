@@ -212,8 +212,41 @@ void ComodosDS::UpgradeGladiator(GladiatorID currGladID, GladiatorID newGladID){
     }
 
 }
-void UpdateLevels(StimulantCode, StimulantFactor);
+void ComodosDS::UpdateLevels(StimulantCode stimulantCode, StimulantFactor stimulantFactor){
+    if(stimulantCode < 1 || stimulantFactor < 1) throw InvalidInputException();
+    gladiators.UpdateLevels(stimulantCode, stimulantFactor);
 
+
+}
+class UpdateLevelsClass{
+public:
+    UpdateLevelsClass(StimulantCode code, StimulantFactor factor) : stimulantCode(code),
+    stimulantFactor(factor){};
+    bool operator()(Gladiator& gladiator){
+        if(gladiator.GetGladiatorID()%stimulantCode == 0) {
+            gladiator.MultiplyLevel(stimulantFactor);
+            return true;
+        }
+        return false;
+    };
+private:
+    StimulantCode stimulantCode;
+    StimulantFactor stimulantFactor;
+};
+
+void GladiatorTree::UpdateLevels(StimulantCode stimulantCode, StimulantFactor stimulantFactor){
+    //creating the function class
+    UpdateLevelsClass updateLevels = UpdateLevelsClass(stimulantCode, stimulantFactor);
+
+    //test
+    Gladiator g = Gladiator(1);
+    ((SplitAndSortTree<Gladiator>::BoolFunc)&updateLevels)(g);
+    //endTest
+
+    SplitAndSortTree<Gladiator> sortTree = SplitAndSortTree<Gladiator>((SplitAndSortTree<Gladiator>::BoolFunc)&updateLevels, tree.size());
+    tree.InOrder((SplayTree<Gladiator>::Func)&sortTree);
+    tree = *sortTree.MakeTreeFromArray(sortTree.merge(), tree.size());
+}
 
 GladiatorTree::GladiatorTree() : tree(SplayTreeWrapper<Gladiator>()), bestGladiator(Gladiator(-1)){}
 

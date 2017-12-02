@@ -7,6 +7,7 @@
 #include "Trainer.h"
 #include "SplayTree.h"
 #include "GladByID.h"
+#include "SplitAndSortTree.h"
 
 using std::exception;
 
@@ -17,6 +18,7 @@ public:
     void AddGladiator(Gladiator&);
     void DeleteGladiator(Gladiator&);
     SplayTreeWrapper<Gladiator>& GetGladiatorsTree();
+    void UpdateLevels(StimulantCode, StimulantFactor);
 private:
     SplayTreeWrapper<Gladiator> tree;
     Gladiator bestGladiator;
@@ -95,7 +97,7 @@ public:
     */
     void UpgradeGladiator(GladiatorID, GladiatorID);
     //todo: implement
-    void UpdateLevels(StimulantCode, StimulantFactor){}
+    void UpdateLevels(StimulantCode, StimulantFactor);
 
 private:
 

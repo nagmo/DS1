@@ -18,6 +18,9 @@ Trainer* Gladiator::GetTrainer(){
 void Gladiator::IncreaseLevel(LevelIncrease levelIncrease){
     level += levelIncrease;
 }
+void Gladiator::MultiplyLevel(LevelIncrease levelIncrease){
+    level *= levelIncrease;
+}
 /**
  * two gladiators are equal if have the same id
  * @param gladiator

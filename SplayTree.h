@@ -173,6 +173,19 @@ public:
         tree->PostOrder(f);
     }
 
+    void SetData(T& t){
+        *(tree->getRootDataPointer()) = t;
+    }
+    void SetLeft(SplayTreeWrapper<T>* t){
+        tree->SetLeft(t->tree);
+    }
+
+    void SetRight(T& t){
+        tree->SetRight(t);
+    }
+    SplayTree<T>* GetTree(){
+        return tree;
+    }
 private:
     SplayTree<T>* tree;
     int numOfItems;
