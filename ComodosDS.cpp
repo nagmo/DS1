@@ -238,14 +238,25 @@ void GladiatorTree::UpdateLevels(StimulantCode stimulantCode, StimulantFactor st
     //creating the function class
     UpdateLevelsClass updateLevels = UpdateLevelsClass(stimulantCode, stimulantFactor);
 
+    /*
     //test
     Gladiator g = Gladiator(1);
     ((SplitAndSortTree<Gladiator>::BoolFunc)&updateLevels)(g);
     //endTest
+*/
 
-    SplitAndSortTree<Gladiator> sortTree = SplitAndSortTree<Gladiator>((SplitAndSortTree<Gladiator>::BoolFunc)&updateLevels, tree.size());
+    //create a class for the inOrder traversal - OK
+    SplitAndSortTree<Gladiator> sortTree =
+            SplitAndSortTree<Gladiator>((SplitAndSortTree<Gladiator>::BoolFunc)&updateLevels, tree.size());
+    //do inOrder traversal to create the two arrays - OK
     tree.InOrder((SplayTree<Gladiator>::Func)&sortTree);
-    tree = *sortTree.MakeTreeFromArray(sortTree.merge(), tree.size());
+    //create a new tree with the merged array. -> someone must delete the merges array!!
+    // I added it to the destructor of the splitAndSort class.
+    //the recursive function does NOT create a tree! I'll try to fix it.
+    SplayTreeWrapper<Gladiator>* tempTree = sortTree.MakeTreeFromArray(sortTree.merge(), tree.size());
+    //we save to tree as a value and not as pointer. so how does the old tree gets deleted and the new one os saved?
+    //this syntax doesn't do it properly.
+    tree = *tempTree;
 }
 
 GladiatorTree::GladiatorTree() : tree(SplayTreeWrapper<Gladiator>()), bestGladiator(Gladiator(-1)){}

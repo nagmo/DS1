@@ -40,6 +40,7 @@ public:
     ~SplitAndSortTree(){
         delete[] trueArray;
         delete[] falseArray;
+        delete[] mergedArray;
     }
 
     /**
@@ -78,17 +79,19 @@ public:
         RecMakeTree(root->GetTree(), mergedArr, size);
         return root;
     }
-    SplayTree<T>* RecMakeTree(SplayTree<T>* root, T** arr, int size){
-        if(size == 0 || root == NULL) return NULL;
-        *root->getRootDataPointer() = *arr[size/2];
-        root->SetLeft(RecMakeTree(root->GetLeft(),arr, size/2));
-        root->SetRight((RecMakeTree(root->GetRight(), arr + sizeof(T*)*(size/2), size/2)));
-    }
+
 private:
     BoolFunc func;
     T* *trueArray;
     T* *falseArray;
     T* *mergedArray;
     int iTrue, iFalse, size;
+
+    SplayTree<T>* RecMakeTree(SplayTree<T>* root, T** arr, int size){
+        if(size == 0 || root == NULL) return NULL;
+        *root->getRootDataPointer() = *arr[size/2];
+        root->SetLeft(RecMakeTree(root->GetLeft(),arr, size/2));
+        root->SetRight((RecMakeTree(root->GetRight(), arr + sizeof(T*)*(size/2), size/2)));
+    }
 };
 #endif //EX1_SPLITANDSORTTREE_H
