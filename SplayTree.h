@@ -120,7 +120,7 @@ SplayTree<T>* RotateLeft(SplayTree<T>*);
  * @return
  */
 template <class T>
-T& getMaxElement(SplayTree<T>* root);
+T* getMaxElement(SplayTree<T>* root);
 
 
 /*************************************************************************
@@ -153,13 +153,15 @@ public:
     };
 
     void Delete(T& data){
-        InnerDelete(data, tree);
+        if(tree == NULL)
+            return;;
+        InnerDelete(data, tree, *this);
         numOfItems--;
     };
 
     int size(){ return numOfItems; }
 
-    T& GetMaxElement(){ return getMaxElement(tree); }
+    T* GetMaxElement(){ return getMaxElement(tree); }
 
     typedef void (*Func)(T&);
 
@@ -299,16 +301,24 @@ void InnerInsert(T& newData, SplayTree<T>** root) {
 }
 
 template <class T>
-void InnerDelete(T& data, SplayTree<T>* root){
+void InnerDelete(T& data, SplayTree<T>* root, SplayTreeWrapper<T>& wrapper){
     root = Splay(data, root);
     if(root->getRootData() == data){
         delete root->getRootDataPointer();
-        //todo: Nevo - ther is a problem when root->GetLeft() is NULL
-        //todo: ... I dont want to mess this up so I let you do it
-        T& maxElementInLeft = getMaxElement(root->GetLeft());
+        T* maxElementInLeft = getMaxElement(root->GetLeft());
         SplayTree<T>* right = root->GetRight();
-        root->SetLeft(Splay(maxElementInLeft, root->GetLeft()));
-        root->SetRight(right);
+        SplayTree<T>* left = root->GetLeft();
+        //if only the left subTree
+        if(right == NULL){
+            *wrapper.GetTree() = *left;
+        } else if(left == NULL){
+            *wrapper.GetTree() = *right;
+        } else{
+            *wrapper.GetTree() = *(Splay(*maxElementInLeft, root->GetLeft()));
+            wrapper.GetTree()->SetRight(right);
+        }
+        //root->SetLeft(Splay(*maxElementInLeft, root->GetLeft()));
+        //root->SetRight(right);
     }else
         throw TreeElementNotInTreeException();
 }
@@ -342,7 +352,7 @@ SplayTree<T>* Splay(T& itemToFind, SplayTree<T>* root){
                 root->SetLeft(RotateLeft(root->GetLeft()));
             }
         }
-        return (root->GetLeft() == NULL)? root : RotateRight(root->GetLeft());
+        return (root->GetLeft() == NULL)? root : RotateRight(root); //was RotateRight(root->GetLeft()
     }else{ //item is in the right subTree.
         if(root->GetRight() == NULL) return root;
         if(root->GetRight()->getRootData() > itemToFind){ ///right->left
@@ -393,9 +403,10 @@ SplayTree<T>* RotateLeft(SplayTree<T>* x){
  * @return
  */
 template <class T>
-T& getMaxElement(SplayTree<T>* root){
+T* getMaxElement(SplayTree<T>* root){
+    if(root == NULL) return NULL;
     if(root->GetRight() == NULL){
-        return root->getRootData();
+        return root->getRootDataPointer();
     }else{
         return getMaxElement(root->GetRight());
     }

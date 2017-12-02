@@ -36,7 +36,7 @@ bool Gladiator::operator==(Gladiator& gladiator){
  */
 bool Gladiator::operator<(Gladiator& gladiator){
     if(subOrderFlag){
-        return level < gladiator.level ? id > gladiator.id : false;
+        return level < gladiator.level;
     }
     return id < gladiator.id;
 }

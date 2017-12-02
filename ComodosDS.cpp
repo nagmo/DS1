@@ -91,31 +91,37 @@ void ComodosDS::FreeGladiator(GladiatorID gladID){
     if(gladID <= 0) throw InvalidInputException();
     //create an instant of glad
     Gladiator tempGlad = Gladiator(gladID);
-    //save trainer id in order to find the trainer
-    TrainerID trainerID = tempGlad.GetTrainer()->GetID();
-    //remove glad from gald tree
     try{
-        gladiators.DeleteGladiator(tempGlad);
+        Gladiator& currGlad = gladiators.GetGladiatorsTree().Find(tempGlad);
+        tempGlad.IncreaseLevel(currGlad.GetLevel());
+        TrainerID trainerID = currGlad.GetTrainer()->GetID();
+        //remove glad from gald tree
+        try{
+            gladiators.DeleteGladiator(tempGlad);
+        }
+        catch (TreeElementNotInTreeException&){
+            throw FailureException();
+        }
+        try{
+            tempGlad.SetFlag(true);
+            gladiatorsByLevel.DeleteGladiator(tempGlad);
+        }
+        catch (TreeElementNotInTreeException&){
+            //std::cout << " Ha Ha " << std::endl;
+        }
+        //remove glad from trainer
+        //create an instant of trainer
+        Trainer tempTrainer = Trainer(trainerID);
+        //get the current trainer
+        //not inside try because trainer must exists
+        Trainer& currTrainer = trainers.Find(tempTrainer);
+        //remove gladiator from trainer
+        //update the bestGlad should happen in the remove function
+        currTrainer.GetGladiatorsTree()->DeleteGladiator(tempGlad);
     }
     catch (TreeElementNotInTreeException&){
         throw FailureException();
     }
-    try{
-        tempGlad.SetFlag(true);
-        gladiatorsByLevel.DeleteGladiator(tempGlad);
-    }
-    catch (TreeElementNotInTreeException&){
-        std::cout << " Ha Ha " << std::endl;
-    }
-    //remove glad from trainer
-    //create an instant of trainer
-    Trainer tempTrainer = Trainer(trainerID);
-    //get the current trainer
-    //not inside try because trainer must exists
-    Trainer currTrainer = trainers.Find(tempTrainer);
-    //remove gladiator from trainer
-    //update the bestGlad should happen in the remove function
-    currTrainer.GetGladiatorsTree()->DeleteGladiator(tempGlad);
 }
 /**
  * update the level of a Gladiator
@@ -145,7 +151,7 @@ void ComodosDS::LevelUp(GladiatorID gladID, LevelIncrease levelIncrease){
 GladiatorID ComodosDS::GetTopGladiator(TrainerID trainerID){
     if(trainerID == 0) throw InvalidInputException();
     if(trainerID < 0){
-        return gladiatorsByLevel.GetGladiatorsTree().GetMaxElement().GetGladiatorID();
+        return gladiatorsByLevel.GetGladiatorsTree().GetMaxElement()->GetGladiatorID();
     }
     //search for trainer
     //create an instant of a trainer
@@ -200,7 +206,13 @@ void ComodosDS::UpgradeGladiator(GladiatorID currGladID, GladiatorID newGladID){
         //delete glad from galdiators tree
         gladiators.GetGladiatorsTree().Delete(currGlad);
         gladiators.GetGladiatorsTree().Insert(newGlad);
-
+        //update gladsByLevel
+        //update the level in order to find the item in the tree
+        tempGlad.SetFlag(true);
+        tempGlad.IncreaseLevel(currGlad.GetLevel());
+        newGlad.SetFlag(true);
+        gladiatorsByLevel.DeleteGladiator(tempGlad);
+        gladiatorsByLevel.AddGladiator(newGlad);
         //update the trainers tree
         Trainer* currTrainer = newGlad.GetTrainer();
         //delete the glad from its trainer
@@ -255,10 +267,10 @@ void GladiatorTree::UpdateLevels(StimulantCode stimulantCode, StimulantFactor st
     //create a new tree with the merged array. -> someone must delete the merges array!!
     // I added it to the destructor of the splitAndSort class.
     //the recursive function does NOT create a tree! I'll try to fix it.
-    SplayTreeWrapper<Gladiator>* tempTree = sortTree.MakeTreeFromArray(sortTree.merge(), tree.size());
+//    SplayTreeWrapper<Gladiator>* tempTree = sortTree.MakeTreeFromArray(sortTree.merge(), tree.size());
     //we save to tree as a value and not as pointer. so how does the old tree gets deleted and the new one os saved?
     //this syntax doesn't do it properly.
-    tree = *tempTree;
+//    tree = *tempTree;
 
     //alternative: added to splay tree a constructor by array.
     tree = SplayTreeWrapper<Gladiator>(sortTree.merge(), tree.size());
@@ -281,7 +293,7 @@ void GladiatorTree::AddGladiator(Gladiator& gladiator) {
 void GladiatorTree::DeleteGladiator(Gladiator& gladiator){
     tree.Delete(gladiator);
     if(gladiator.GetGladiatorID() == bestGladiator.GetGladiatorID()){
-        bestGladiator = Gladiator(tree.GetMaxElement());
+        bestGladiator = Gladiator(*(tree.GetMaxElement()));
     }
 }
 

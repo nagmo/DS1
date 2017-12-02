@@ -41,7 +41,7 @@ public:
 
     int size(){ return tree.size(); }
 
-    Trainer& GetMaxElement(){ return tree.GetMaxElement(); }
+    Trainer* GetMaxElement(){ return tree.GetMaxElement(); }
 
     typedef void (*Func)(Trainer&);
 
