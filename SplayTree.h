@@ -153,8 +153,7 @@ public:
     };
 
     void Delete(T& data){
-        if(tree == NULL)
-            return;;
+        if(tree == NULL) return;
         InnerDelete(data, tree, *this);
         numOfItems--;
     };
@@ -190,7 +189,12 @@ public:
     SplayTree<T>* GetTree(){
         return tree;
     }
-
+    void SetTree(SplayTree<T>* splayTree = NULL){
+        //if(splayTree == NULL){
+        //    delete tree;
+        //}
+        tree = splayTree;
+    }
     SplayTreeWrapper(T** array, int size);
 
 private:
@@ -308,10 +312,17 @@ void InnerDelete(T& data, SplayTree<T>* root, SplayTreeWrapper<T>& wrapper){
         T* maxElementInLeft = getMaxElement(root->GetLeft());
         SplayTree<T>* right = root->GetRight();
         SplayTree<T>* left = root->GetLeft();
+        if(right == NULL && left == NULL){
+            //delete root;
+            wrapper.SetTree();
+        }
         //if only the left subTree
-        if(right == NULL){
+        else if(right == NULL && left != NULL){
+            //delete root;
             *wrapper.GetTree() = *left;
-        } else if(left == NULL){
+            //if only right subTree
+        } else if(left == NULL && right != NULL){
+            //delete root;
             *wrapper.GetTree() = *right;
         } else{
             *wrapper.GetTree() = *(Splay(*maxElementInLeft, root->GetLeft()));

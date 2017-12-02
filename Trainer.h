@@ -37,6 +37,7 @@ public:
     */
     Gladiator& GetBestGladiator();
 
+    void SetBestGladiator();
     /**
     * return gladiators tree
     * @return

@@ -43,6 +43,10 @@ Gladiator& Trainer::GetBestGladiator() {
     return bestGladiator;
 }
 
+void Trainer::SetBestGladiator(){
+    Gladiator* newBestGladiator = gladiators->GetGladiatorsTree().GetMaxElement();
+    bestGladiator = (newBestGladiator == NULL) ? Gladiator(-1) : Gladiator(*newBestGladiator);
+}
 /**
  * return gladiators tree
  * @return

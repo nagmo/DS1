@@ -93,8 +93,10 @@ void ComodosDS::FreeGladiator(GladiatorID gladID){
     Gladiator tempGlad = Gladiator(gladID);
     try{
         Gladiator& currGlad = gladiators.GetGladiatorsTree().Find(tempGlad);
+        //get trainer for later
+        Trainer* currTrainer = currGlad.GetTrainer();
+        //increase level to use it in the next trees
         tempGlad.IncreaseLevel(currGlad.GetLevel());
-        TrainerID trainerID = currGlad.GetTrainer()->GetID();
         //remove glad from gald tree
         try{
             gladiators.DeleteGladiator(tempGlad);
@@ -109,15 +111,12 @@ void ComodosDS::FreeGladiator(GladiatorID gladID){
         catch (TreeElementNotInTreeException&){
             //std::cout << " Ha Ha " << std::endl;
         }
-        //remove glad from trainer
-        //create an instant of trainer
-        Trainer tempTrainer = Trainer(trainerID);
-        //get the current trainer
-        //not inside try because trainer must exists
-        Trainer& currTrainer = trainers.Find(tempTrainer);
         //remove gladiator from trainer
-        //update the bestGlad should happen in the remove function
-        currTrainer.GetGladiatorsTree()->DeleteGladiator(tempGlad);
+        currTrainer->GetGladiatorsTree()->DeleteGladiator(tempGlad);
+        //update best glad of trainer
+        if(currTrainer->GetBestGladiator().GetGladiatorID() == gladID){
+            currTrainer->SetBestGladiator();
+        }
     }
     catch (TreeElementNotInTreeException&){
         throw FailureException();
@@ -135,13 +134,20 @@ void ComodosDS::LevelUp(GladiatorID gladID, LevelIncrease levelIncrease){
     Gladiator tempGlad = Gladiator(gladID);
     try{
         //if not exists should throw exception
-        Gladiator currGlad = gladiators.GetGladiatorsTree().Find(tempGlad);
-
+        Gladiator& currGlad = gladiators.GetGladiatorsTree().Find(tempGlad);
+        tempGlad.IncreaseLevel(currGlad.GetLevel());
         //update gladiator level
         currGlad.IncreaseLevel(levelIncrease);
+        //update glads by level
+        tempGlad.SetFlag(true);
+        //make a copy in order to change sort flag
+        Gladiator newGlad = Gladiator(currGlad);
+        newGlad.SetFlag(true);
+        gladiatorsByLevel.DeleteGladiator(tempGlad);
+        gladiatorsByLevel.AddGladiator(newGlad);
         //remove and inset from trainers tree
         currGlad.GetTrainer()->GetGladiatorsTree()->DeleteGladiator(tempGlad);
-        currGlad.GetTrainer()->GetGladiatorsTree()->AddGladiator(currGlad);
+        currGlad.GetTrainer()->GetGladiatorsTree()->AddGladiator(newGlad);
     }
     catch (TreeElementNotInTreeException&){
         throw FailureException();
@@ -159,7 +165,7 @@ GladiatorID ComodosDS::GetTopGladiator(TrainerID trainerID){
     //search in trainers tree
     try{
         //if not found, should throw exception
-        Trainer currTrainer = trainers.Find(tempTrainer);
+        Trainer& currTrainer = trainers.Find(tempTrainer);
         return currTrainer.GetBestGladiator().GetGladiatorID();
     }
     catch (TreeElementNotInTreeException&){
@@ -293,7 +299,8 @@ void GladiatorTree::AddGladiator(Gladiator& gladiator) {
 void GladiatorTree::DeleteGladiator(Gladiator& gladiator){
     tree.Delete(gladiator);
     if(gladiator.GetGladiatorID() == bestGladiator.GetGladiatorID()){
-        bestGladiator = Gladiator(*(tree.GetMaxElement()));
+        Gladiator* newBest = tree.GetMaxElement();
+        bestGladiator = (newBest == NULL) ? Gladiator(-1) : Gladiator(*newBest);
     }
 }
 
