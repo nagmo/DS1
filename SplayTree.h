@@ -29,6 +29,8 @@ public:
     */
     SplayTree();
 
+    SplayTree(T** array, int start, int end);
+
     /**
     * destructor deletes data and deletes each subtree recursively.
     * @tparam T
@@ -186,6 +188,9 @@ public:
     SplayTree<T>* GetTree(){
         return tree;
     }
+
+    SplayTreeWrapper(T** array, int size);
+
 private:
     SplayTree<T>* tree;
     int numOfItems;
@@ -235,6 +240,22 @@ SplayTree<T>::~SplayTree(){
     if(data != NULL) delete data;
     delete left;
     delete right;
+}
+
+template <class T>
+SplayTree<T>::SplayTree(T** array, int start, int end) :
+    data(NULL), left(NULL), right(NULL) {
+    if(start > end) return;
+    int mid = (start+end)/2;
+    data = array[mid];
+    left = new SplayTree<T>(array, start, mid+1);
+    right = new SplayTree<T>(array, mid+1, end);
+}
+
+template <class T>
+SplayTreeWrapper<T>::SplayTreeWrapper(T** array, int size) :
+        numOfItems(size), tree(NULL){
+    tree = new SplayTree<T>(array, 0, size);
 }
 
 template <class T>
