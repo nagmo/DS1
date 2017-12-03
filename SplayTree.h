@@ -251,6 +251,8 @@ SplayTree<T>::~SplayTree(){
 template <class T>
 SplayTree<T>::SplayTree(T** array, int start, int end) :
     data(NULL), left(NULL), right(NULL) {
+    //TODO: BOOM!!
+    //TODO: YUVAL - what sould i do if at the end of recursion?
     if(start > end) return;
     int mid = (start+end)/2;
     data = array[mid];
