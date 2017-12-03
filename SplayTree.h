@@ -70,7 +70,7 @@ private:
 
 template <class T,class Func>
 void InnerDelete(T& data, SplayTree<T>* root);
-template <class T>
+template <class T,class Func>
 T& InnerFind(T& data, SplayTree<T>* root);
 
 /**
@@ -258,14 +258,10 @@ SplayTree<T>::SplayTree(T** array, int start, int end) :
 template <class T>
 SplayTree<T>* SplayTree<T>::recConstructor(T** array, int start, int end,
                               SplayTree<T>* tree){
-    if(start > end) {
-        delete tree;
-        return NULL;
-    }
     int mid = (start+end)/2;
     *tree->data = *array[mid];
-    tree->left = new SplayTree<T>(array, start, mid-1);
-    tree->right = new SplayTree<T>(array, mid+1, end);
+    tree->left = (start > mid-1) ? NULL : new SplayTree<T>(array, start, mid-1);
+    tree->right = (mid+1 > end) ? NULL :new SplayTree<T>(array, mid+1, end);
     return tree;
 }
 
