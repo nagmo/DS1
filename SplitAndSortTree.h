@@ -16,10 +16,9 @@
  *          isn't necessarily the same as the tree's data type.
  ************************************************************************/
 
-template <class T>
+template <class T,class BoolFunc>
 class SplitAndSortTree{
 public:
-    typedef bool (*BoolFunc)(T&);
 
     /**
      * @param f - Boolean function for calculation.

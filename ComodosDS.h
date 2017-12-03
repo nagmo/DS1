@@ -6,29 +6,31 @@
 #include "Gladiator.h"
 #include "Trainer.h"
 #include "SplayTree.h"
-#include "GladByID.h"
-#include "SplitAndSortTree.h"
+#include "FuncWrapper_InOrder.h"
 
 using std::exception;
 
+template <class T>
 class GladiatorTree{
 public:
     GladiatorTree();
     void UpdateBestGladiator(Gladiator&);
     void AddGladiator(Gladiator&);
     void DeleteGladiator(Gladiator&);
-    SplayTreeWrapper<Gladiator>& GetGladiatorsTree();
+    SplayTreeWrapper<Gladiator,T>& GetGladiatorsTree();
     void UpdateLevels(StimulantCode, StimulantFactor);
 private:
-    SplayTreeWrapper<Gladiator> tree;
+    SplayTreeWrapper<Gladiator,T> tree;
     Gladiator bestGladiator;
 
 };
 
+class DUMMY{};
+
 class TrainerTree {
 public:
     TrainerTree() {
-        tree = SplayTreeWrapper<Trainer>();
+        tree = SplayTreeWrapper<Trainer,DUMMY>();
     }
 
     Trainer& getRootData(){ return tree.getRootData(); };
@@ -45,9 +47,8 @@ public:
 
     typedef void (*Func)(Trainer&);
 
-    void InOrder(Func f, bool reverse = false){ tree.InOrder(f, reverse); }
 private:
-    SplayTreeWrapper<Trainer> tree;
+    SplayTreeWrapper<Trainer,DUMMY> tree;
 };
 
 class ComodosDS {
@@ -102,8 +103,8 @@ public:
 private:
 
     TrainerTree trainers;
-    GladiatorTree gladiators;
-    GladiatorTree gladiatorsByLevel;
+    GladiatorTree<UpdateGladLevel> gladiators;
+    GladiatorTree<FuncWrapper_InOrder> gladiatorsByLevel;
 };
 
 

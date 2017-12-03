@@ -7,8 +7,10 @@
  * use inside try block
  */
 ComodosDS::ComodosDS() : trainers(TrainerTree()),
-                         gladiators(GladiatorTree()), gladiatorsByLevel(GladiatorTree()){
+                         gladiators(GladiatorTree<UpdateGladLevel>()),
+                         gladiatorsByLevel(GladiatorTree<FuncWrapper_InOrder>()){
 }
+
 /**
  * use inside try block
  * exceptions:
@@ -179,7 +181,7 @@ GladByLevel ComodosDS::GetAllGladiatorsByLevel(TrainerID trainerID){
     //get all glads
     if(trainerID<0){
         gladByLevel.SetNumOfGlads(this->gladiatorsByLevel.GetGladiatorsTree().size());
-        this->gladiatorsByLevel.GetGladiatorsTree().InOrder((SplayTreeWrapper<Gladiator>::Func)&gladByLevel, true);
+        this->gladiatorsByLevel.GetGladiatorsTree().InOrder(FuncWrapper_InOrder(false, &gladByLevel), true);
         return gladByLevel;
     }
     //get by trainer
@@ -187,7 +189,7 @@ GladByLevel ComodosDS::GetAllGladiatorsByLevel(TrainerID trainerID){
     try{
         Trainer currTrainer = trainers.Find(tempTrainer);
         gladByLevel.SetNumOfGlads(currTrainer.GetGladiatorsTree()->GetGladiatorsTree().size());
-        currTrainer.GetGladiatorsTree()->GetGladiatorsTree().InOrder((SplayTreeWrapper<Gladiator>::Func)&gladByLevel, true);
+        currTrainer.GetGladiatorsTree()->GetGladiatorsTree().InOrder(FuncWrapper_InOrder(false, &gladByLevel), true);
         return gladByLevel;
     }catch (TreeElementNotInTreeException&){
         throw FailureException();
@@ -252,41 +254,30 @@ private:
     StimulantFactor stimulantFactor;
 };
 
+template <class T>
 void GladiatorTree::UpdateLevels(StimulantCode stimulantCode, StimulantFactor stimulantFactor){
     //creating the function class
     UpdateLevelsClass updateLevels = UpdateLevelsClass(stimulantCode, stimulantFactor);
 
-    /*
-    //test
-    Gladiator g = Gladiator(1);
-    ((SplitAndSortTree<Gladiator>::BoolFunc)&updateLevels)(g);
-    //endTest
-*/
-
     //create a class for the inOrder traversal - OK
-    SplitAndSortTree<Gladiator> sortTree =
-            SplitAndSortTree<Gladiator>((SplitAndSortTree<Gladiator>::BoolFunc)&updateLevels, tree.size());
+    SplitAndSortTree<Gladiator,UpdateLevelsClass> sortTree =
+            SplitAndSortTree<Gladiator,UpdateLevelsClass>(updateLevels, tree.size());
     //do inOrder traversal to create the two arrays - OK
-    tree.InOrder((SplayTree<Gladiator>::Func)&sortTree);
-
-    //current version:
-    //create a new tree with the merged array. -> someone must delete the merges array!!
-    // I added it to the destructor of the splitAndSort class.
-    //the recursive function does NOT create a tree! I'll try to fix it.
-//    SplayTreeWrapper<Gladiator>* tempTree = sortTree.MakeTreeFromArray(sortTree.merge(), tree.size());
-    //we save to tree as a value and not as pointer. so how does the old tree gets deleted and the new one os saved?
-    //this syntax doesn't do it properly.
-//    tree = *tempTree;
+    tree.InOrder(FuncWrapper_InOrder(true, &sortTree));
 
     //alternative: added to splay tree a constructor by array.
-    tree = SplayTreeWrapper<Gladiator>(sortTree.merge(), tree.size());
+    tree = SplayTreeWrapper<Gladiator,T>(sortTree.merge(), tree.size());
 }
 
-GladiatorTree::GladiatorTree() : tree(SplayTreeWrapper<Gladiator>()), bestGladiator(Gladiator(-1)){}
+template <class T>
+GladiatorTree::GladiatorTree() : tree(SplayTreeWrapper<Gladiator,T>()), bestGladiator(Gladiator(-1)){}
 
+template <class T>
 void GladiatorTree::UpdateBestGladiator(Gladiator& gladiator){
     bestGladiator = Gladiator(gladiator);
 }
+
+template <class T>
 void GladiatorTree::AddGladiator(Gladiator& gladiator) {
     tree.Insert(gladiator);
     //if is better
@@ -296,6 +287,7 @@ void GladiatorTree::AddGladiator(Gladiator& gladiator) {
     }
 }
 
+template <class T>
 void GladiatorTree::DeleteGladiator(Gladiator& gladiator){
     tree.Delete(gladiator);
     if(gladiator.GetGladiatorID() == bestGladiator.GetGladiatorID()){
@@ -304,7 +296,8 @@ void GladiatorTree::DeleteGladiator(Gladiator& gladiator){
     }
 }
 
-SplayTreeWrapper<Gladiator>& GladiatorTree::GetGladiatorsTree(){
+template <class T>
+SplayTreeWrapper<Gladiator,T>& GladiatorTree::GetGladiatorsTree(){
     return tree;
 }
 

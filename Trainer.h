@@ -6,6 +6,7 @@
 #include "Gladiator.h"
 #include "SplayTree.h"
 #include "ComodosDS.h"
+#include "FuncWrapper_InOrder.h"
 
 class GladiatorTree;
 
@@ -66,7 +67,7 @@ private:
 
     TrainerID id;
     Gladiator bestGladiator;
-    GladiatorTree* gladiators;
+    GladiatorTree<FuncWrapper_InOrder>* gladiators;
 
 };
 

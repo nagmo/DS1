@@ -52,4 +52,19 @@ private:
 };
 
 
+class UpdateGladLevel{
+public:
+    UpdateGladLevel(StimulantCode stimulantCode, StimulantFactor stimulantFactor):
+            stimulantCode(stimulantCode), stimulantFactor(stimulantFactor){};
+    void operator()(Gladiator& glad){
+        if(glad.GetGladiatorID() % stimulantCode == 0)
+            glad.MultiplyLevel(stimulantFactor);
+    }
+
+private:
+    StimulantFactor stimulantFactor;
+    StimulantCode stimulantCode;
+};
+
+
 #endif //EX1_GLADIATOR_H

@@ -11,7 +11,7 @@
         operators overloading: ==, <, >
 
  ************************************************************************/
-template <class T>
+template <class T,class Func>
 class SplayTree {
 
 public:
@@ -48,7 +48,6 @@ public:
 
     void SetRight(SplayTree* splayTree = NULL){ right = splayTree;}
     ///generic function for tree traversal.
-    typedef void (*Func)(T&);
 
     /**
     * traversal functions for tree.
@@ -69,7 +68,7 @@ private:
                                      SplayTree* tree);
 };
 
-template <class T>
+template <class T,class Func>
 void InnerDelete(T& data, SplayTree<T>* root);
 template <class T>
 T& InnerFind(T& data, SplayTree<T>* root);
@@ -80,7 +79,7 @@ T& InnerFind(T& data, SplayTree<T>* root);
  * @param newData
  * @param root
  */
-template <class T>
+template <class T,class Func>
 void InnerInsert(T& newData, SplayTree<T>* root);
 
 /**
@@ -131,7 +130,7 @@ T* getMaxElement(SplayTree<T>* root);
  * appear as methods.
  * the usage of the tree shuld be only with the wrapper.
  ************************************************************************/
-template <class T>
+template <class T,class Func>
 class SplayTreeWrapper{
 
 public:
@@ -165,8 +164,6 @@ public:
 
     T* GetMaxElement(){ return getMaxElement(tree); }
 
-    typedef void (*Func)(T&);
-
     void InOrder(Func f, bool reverse = false){
         tree->InOrder(f, reverse);
     }
@@ -182,17 +179,17 @@ public:
     void SetData(T& t){
         *(tree->getRootDataPointer()) = t;
     }
-    void SetLeft(SplayTreeWrapper<T>* t){
+    void SetLeft(SplayTreeWrapper* t){
         tree->SetLeft(t->tree);
     }
 
     void SetRight(T& t){
         tree->SetRight(t);
     }
-    SplayTree<T>* GetTree(){
+    SplayTree<T,Func>* GetTree(){
         return tree;
     }
-    void SetTree(SplayTree<T>* splayTree = NULL){
+    void SetTree(SplayTree<T,Func>* splayTree = NULL){
         //if(splayTree == NULL){
         //    delete tree;
         //}
@@ -201,7 +198,7 @@ public:
     SplayTreeWrapper(T** array, int size);
 
 private:
-    SplayTree<T>* tree;
+    SplayTree<T,Func>* tree;
     int numOfItems;
 
 };
