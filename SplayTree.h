@@ -64,6 +64,9 @@ private:
     SplayTree *left;
     SplayTree *right;
     T* data;
+
+    SplayTree* recConstructor(T** array, int start, int end,
+                                     SplayTree* tree);
 };
 
 template <class T>
@@ -200,6 +203,7 @@ public:
 private:
     SplayTree<T>* tree;
     int numOfItems;
+
 };
 
 /**
@@ -251,13 +255,21 @@ SplayTree<T>::~SplayTree(){
 template <class T>
 SplayTree<T>::SplayTree(T** array, int start, int end) :
     data(NULL), left(NULL), right(NULL) {
-    //TODO: BOOM!!
-    //TODO: YUVAL - what sould i do if at the end of recursion?
-    if(start > end) return;
+    recConstructor(array, start, end, this);
+}
+
+template <class T>
+SplayTree<T>* SplayTree<T>::recConstructor(T** array, int start, int end,
+                              SplayTree<T>* tree){
+    if(start > end) {
+        delete tree;
+        return NULL;
+    }
     int mid = (start+end)/2;
-    data = array[mid];
-    left = new SplayTree<T>(array, start, mid+1);
-    right = new SplayTree<T>(array, mid+1, end);
+    *tree->data = *array[mid];
+    tree->left = new SplayTree<T>(array, start, mid-1);
+    tree->right = new SplayTree<T>(array, mid+1, end);
+    return tree;
 }
 
 template <class T>
