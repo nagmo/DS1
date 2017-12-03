@@ -94,7 +94,7 @@ void InnerInsert(T& newData, SplayTree<T>* root);
  * @param root
  * @return - the root of the splayed tree.
  */
-template <class T>
+template <class T,class Func>
 SplayTree<T>* Splay(T& itemToFind, SplayTree<T>* root);
 
 /**
@@ -103,7 +103,7 @@ SplayTree<T>* Splay(T& itemToFind, SplayTree<T>* root);
  * @param x
  * @return
  */
-template <class T>
+template <class T,class Func>
 SplayTree<T>* RotateRight(SplayTree<T>*);
 
 /**
@@ -112,7 +112,7 @@ SplayTree<T>* RotateRight(SplayTree<T>*);
  * @param x
  * @return
  */
-template <class T>
+template <class T,class Func>
 SplayTree<T>* RotateLeft(SplayTree<T>*);
 
 /**
@@ -121,7 +121,7 @@ SplayTree<T>* RotateLeft(SplayTree<T>*);
  * @param root
  * @return
  */
-template <class T>
+template <class T,class Func>
 T* getMaxElement(SplayTree<T>* root);
 
 
@@ -226,7 +226,7 @@ class TreeElementNotInTreeException : exception{};
  * no data constructor
  * @tparam T
  */
-template <class T>
+template <class T,class Func>
 SplayTree<T>::SplayTree() : left(NULL), right(NULL), data(NULL) {}
 
 /**
@@ -234,7 +234,7 @@ SplayTree<T>::SplayTree() : left(NULL), right(NULL), data(NULL) {}
  * @tparam T
  * @param data
  */
-template <class T>
+template <class T,class Func>
 SplayTree<T>::SplayTree(T& data, SplayTree<T>* left, SplayTree<T>* right) :
         left(left), right(right), data(new T(data)) {}
 
@@ -242,20 +242,20 @@ SplayTree<T>::SplayTree(T& data, SplayTree<T>* left, SplayTree<T>* right) :
  * destructor deletes data and deletes each subtree recursively.
  * @tparam T
  */
-template <class T>
+template <class T,class Func>
 SplayTree<T>::~SplayTree(){
     if(data != NULL) delete data;
     delete left;
     delete right;
 }
 
-template <class T>
+template <class T,class Func>
 SplayTree<T>::SplayTree(T** array, int start, int end) :
     data(NULL), left(NULL), right(NULL) {
     recConstructor(array, start, end, this);
 }
 
-template <class T>
+template <class T,class Func>
 SplayTree<T>* SplayTree<T>::recConstructor(T** array, int start, int end,
                               SplayTree<T>* tree){
     int mid = (start+end)/2;
@@ -265,23 +265,23 @@ SplayTree<T>* SplayTree<T>::recConstructor(T** array, int start, int end,
     return tree;
 }
 
-template <class T>
+template <class T,class Func>
 SplayTreeWrapper<T>::SplayTreeWrapper(T** array, int size) :
         numOfItems(size), tree(NULL){
     tree = new SplayTree<T>(array, 0, size);
 }
 
-template <class T>
+template <class T,class Func>
 T& SplayTree<T>::getRootData() {
     return *(this->data);
 }
 
-template <class T>
+template <class T,class Func>
 T* SplayTree<T>::getRootDataPointer() {
     return this->data;
 }
 
-template <class T>
+template <class T,class Func>
 T& InnerFind(T& data, SplayTree<T>** root){
     *root = Splay(data, *root);
     if((*root)->getRootData() == data){
@@ -297,7 +297,7 @@ T& InnerFind(T& data, SplayTree<T>** root){
  * @param newData
  * @param root
  */
-template <class T>
+template <class T,class Func>
 void InnerInsert(T& newData, SplayTree<T>** root) {
     *root = Splay(newData, *root);
     if((*root)->getRootData() == newData)
@@ -311,7 +311,7 @@ void InnerInsert(T& newData, SplayTree<T>** root) {
     }
 }
 
-template <class T>
+template <class T,class Func>
 void InnerDelete(T& data, SplayTree<T>* root, SplayTreeWrapper<T>& wrapper){
     root = Splay(data, root);
     if(root->getRootData() == data){
@@ -353,7 +353,7 @@ void InnerDelete(T& data, SplayTree<T>* root, SplayTreeWrapper<T>& wrapper){
  * @param root
  * @return - the root of the splayed tree.
  */
-template <class T>
+template <class T,class Func>
 SplayTree<T>* Splay(T& itemToFind, SplayTree<T>* root){
     ///stop condition - root is null or holds the item.
     if(root == NULL || root->getRootData() == itemToFind) return root;
@@ -392,7 +392,7 @@ SplayTree<T>* Splay(T& itemToFind, SplayTree<T>* root){
  * @param x
  * @return
  */
-template <class T>
+template <class T,class Func>
 SplayTree<T>* RotateRight(SplayTree<T>* x){
     SplayTree<T>* y = x->GetLeft();
     x->SetLeft(y->GetRight());
@@ -406,7 +406,7 @@ SplayTree<T>* RotateRight(SplayTree<T>* x){
  * @param x
  * @return
  */
-template <class T>
+template <class T,class Func>
 SplayTree<T>* RotateLeft(SplayTree<T>* x){
     SplayTree<T>* y = x->GetRight();
     x->SetRight(y->GetLeft());
@@ -420,7 +420,7 @@ SplayTree<T>* RotateLeft(SplayTree<T>* x){
  * @param root
  * @return
  */
-template <class T>
+template <class T,class Func>
 T* getMaxElement(SplayTree<T>* root){
     if(root == NULL) return NULL;
     if(root->GetRight() == NULL){
@@ -435,7 +435,7 @@ T* getMaxElement(SplayTree<T>* root){
  * @tparam T
  * @param f
  */
-template <class T>
+template <class T,class Func>
 void SplayTree<T>::InOrder(Func f, bool reverse){
     if(reverse){
         if(this->right != NULL) this->right->InOrder(f);
@@ -447,14 +447,14 @@ void SplayTree<T>::InOrder(Func f, bool reverse){
     if(this->right != NULL) this->right->InOrder(f);
 }
 
-template <class T>
+template <class T,class Func>
 void SplayTree<T>::PreOrder(Func f){
     f(this->data);
     if(this->left != NULL) this->left->InOrder(f);
     if(this->right != NULL) this->right->InOrder(f);
 }
 
-template <class T>
+template <class T,class Func>
 void SplayTree<T>::PostOrder(Func f){
     if(this->left != NULL) this->left->InOrder(f);
     if(this->right != NULL) this->right->InOrder(f);

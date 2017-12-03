@@ -1,5 +1,6 @@
 
 #include "Trainer.h"
+#include "FuncWrapper_InOrder.h"
 
 #define DUMMY -1
 /**
@@ -8,7 +9,7 @@
  */
 Trainer::Trainer(TrainerID id, bool withGladTree) :
         id(id), bestGladiator(Gladiator(DUMMY, NULL, DUMMY)){
-    if(withGladTree) gladiators = new GladiatorTree();
+    if(withGladTree) gladiators = new GladiatorTree<FuncWrapper_InOrder>();
     else gladiators = NULL;
 }
 /**
@@ -16,7 +17,7 @@ Trainer::Trainer(TrainerID id, bool withGladTree) :
  * @param t
  */
 Trainer::Trainer(const Trainer& t) : id(t.id), bestGladiator(t.bestGladiator){
-    gladiators = new GladiatorTree();
+    gladiators = new GladiatorTree<FuncWrapper_InOrder>();
 }
 
 Trainer::~Trainer(){
