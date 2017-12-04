@@ -158,6 +158,7 @@ void ComodosDS::LevelUp(GladiatorID gladID, LevelIncrease levelIncrease){
 
 GladiatorID ComodosDS::GetTopGladiator(TrainerID trainerID){
     if(trainerID == 0) throw InvalidInputException();
+    if(gladiatorsByLevel.IsNull()) return -1;
     if(trainerID < 0){
         return gladiatorsByLevel.GetGladiatorsTree().GetMaxElement()->GetGladiatorID();
     }
@@ -177,6 +178,10 @@ GladiatorID ComodosDS::GetTopGladiator(TrainerID trainerID){
 
 GladByLevel* ComodosDS::GetAllGladiatorsByLevel(TrainerID trainerID){
     if(trainerID == 0) throw InvalidInputException();
+    if(gladiatorsByLevel.IsNull()){
+        GladByLevel* glad = new GladByLevel();
+        return glad;
+    }
     GladByLevel* gladByLevel = new GladByLevel();
     //get all glads
     if(trainerID<0){
@@ -188,6 +193,10 @@ GladByLevel* ComodosDS::GetAllGladiatorsByLevel(TrainerID trainerID){
     Trainer tempTrainer = Trainer(trainerID);
     try{
         Trainer& currTrainer = trainers.Find(tempTrainer);
+        if(currTrainer.GetGladiatorsTree()->IsNull()){
+            GladByLevel* glad = new GladByLevel();
+            return glad;
+        }
         gladByLevel->SetNumOfGlads(currTrainer.GetGladiatorsTree()->GetGladiatorsTree().size());
         currTrainer.GetGladiatorsTree()->GetGladiatorsTree().InOrder(FuncWrapper_InOrder<Gladiator>(false, gladByLevel), true);
         return gladByLevel;
@@ -255,6 +264,7 @@ void TrainerTree::InOrder(StimulantCode code, StimulantFactor factor){
 }
 void ComodosDS::UpdateLevels(StimulantCode stimulantCode, StimulantFactor stimulantFactor){
     if(stimulantCode < 1 || stimulantFactor < 1) throw InvalidInputException();
+    if(gladiators.IsNull()) return;
     gladiators.UpdateLevelsById(stimulantCode, stimulantFactor);
     gladiatorsByLevel.UpdateLevels(stimulantCode, stimulantFactor);
     trainers.InOrder(stimulantCode, stimulantFactor);
