@@ -74,3 +74,4 @@ private:
 
 
 #endif //EX1_TRAINER_H
+   

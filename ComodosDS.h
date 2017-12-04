@@ -10,6 +10,7 @@
 
 using std::exception;
 
+class UpdateTrainersLevel;
 template <class T>
 class GladiatorTree{
 public:
@@ -19,18 +20,19 @@ public:
     void DeleteGladiator(Gladiator&);
     SplayTreeWrapper<Gladiator,T>& GetGladiatorsTree();
     void UpdateLevels(StimulantCode, StimulantFactor);
+    void UpdateLevelsById(StimulantCode, StimulantFactor);
+    bool IsNull(){ return tree.GetTree() == NULL;}
 private:
     SplayTreeWrapper<Gladiator,T> tree;
     Gladiator bestGladiator;
 
 };
 
-class DUMMY{};
 
 class TrainerTree {
 public:
     TrainerTree() {
-        tree = SplayTreeWrapper<Trainer,DUMMY>();
+        tree = SplayTreeWrapper<Trainer, UpdateTrainersLevel>();
     }
 
     Trainer& getRootData(){ return tree.getRootData(); };
@@ -45,10 +47,10 @@ public:
 
     Trainer* GetMaxElement(){ return tree.GetMaxElement(); }
 
-    typedef void (*Func)(Trainer&);
+    void InOrder(StimulantCode code, StimulantFactor factor);
 
 private:
-    SplayTreeWrapper<Trainer,DUMMY> tree;
+    SplayTreeWrapper<Trainer,UpdateTrainersLevel> tree;
 };
 
 class ComodosDS {
@@ -89,7 +91,7 @@ public:
     */
     void LevelUp(GladiatorID, LevelIncrease);
     GladiatorID GetTopGladiator(TrainerID);
-    GladByLevel GetAllGladiatorsByLevel(TrainerID);
+    GladByLevel* GetAllGladiatorsByLevel(TrainerID);
     /**
     * change gladiator Id
     * update it in the glads tree and in the trainers tree

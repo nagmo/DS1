@@ -175,21 +175,21 @@ GladiatorID ComodosDS::GetTopGladiator(TrainerID trainerID){
     };
 }
 
-GladByLevel ComodosDS::GetAllGladiatorsByLevel(TrainerID trainerID){
+GladByLevel* ComodosDS::GetAllGladiatorsByLevel(TrainerID trainerID){
     if(trainerID == 0) throw InvalidInputException();
-    GladByLevel gladByLevel;
+    GladByLevel* gladByLevel = new GladByLevel();
     //get all glads
     if(trainerID<0){
-        gladByLevel.SetNumOfGlads(this->gladiatorsByLevel.GetGladiatorsTree().size());
-        this->gladiatorsByLevel.GetGladiatorsTree().InOrder(FuncWrapper_InOrder<Gladiator>(false, &gladByLevel), true);
+        gladByLevel->SetNumOfGlads(this->gladiatorsByLevel.GetGladiatorsTree().size());
+        this->gladiatorsByLevel.GetGladiatorsTree().InOrder(FuncWrapper_InOrder<Gladiator>(false, gladByLevel), true);
         return gladByLevel;
     }
     //get by trainer
     Trainer tempTrainer = Trainer(trainerID);
     try{
         Trainer& currTrainer = trainers.Find(tempTrainer);
-        gladByLevel.SetNumOfGlads(currTrainer.GetGladiatorsTree()->GetGladiatorsTree().size());
-        currTrainer.GetGladiatorsTree()->GetGladiatorsTree().InOrder(FuncWrapper_InOrder<Gladiator>(false, &gladByLevel), true);
+        gladByLevel->SetNumOfGlads(currTrainer.GetGladiatorsTree()->GetGladiatorsTree().size());
+        currTrainer.GetGladiatorsTree()->GetGladiatorsTree().InOrder(FuncWrapper_InOrder<Gladiator>(false, gladByLevel), true);
         return gladByLevel;
     }catch (TreeElementNotInTreeException&){
         throw FailureException();
@@ -232,11 +232,32 @@ void ComodosDS::UpgradeGladiator(GladiatorID currGladID, GladiatorID newGladID){
     }
 
 }
+
+class UpdateTrainersLevel {
+public:
+    UpdateTrainersLevel(StimulantCode code, StimulantFactor factor) :
+            stimulantCode(code), stimulantFactor(factor) {}
+
+    void operator()(Trainer* trainer) {
+        if(trainer->GetGladiatorsTree()->IsNull())
+            return;
+        trainer->GetGladiatorsTree()->UpdateLevels(stimulantCode, stimulantFactor);
+    }
+
+private:
+    StimulantFactor stimulantFactor;
+    StimulantCode stimulantCode;
+};
+
+void TrainerTree::InOrder(StimulantCode code, StimulantFactor factor){
+    UpdateTrainersLevel update = UpdateTrainersLevel(code, factor);
+    tree.InOrderP(update);
+}
 void ComodosDS::UpdateLevels(StimulantCode stimulantCode, StimulantFactor stimulantFactor){
     if(stimulantCode < 1 || stimulantFactor < 1) throw InvalidInputException();
-    gladiators.UpdateLevels(stimulantCode, stimulantFactor);
-
-
+    gladiators.UpdateLevelsById(stimulantCode, stimulantFactor);
+    gladiatorsByLevel.UpdateLevels(stimulantCode, stimulantFactor);
+    trainers.InOrder(stimulantCode, stimulantFactor);
 }
 
 template <class T>
@@ -248,10 +269,18 @@ void GladiatorTree<T>::UpdateLevels(StimulantCode stimulantCode, StimulantFactor
     SplitAndSortTree<Gladiator,UpdateLevelsClass> sortTree =
             SplitAndSortTree<Gladiator,UpdateLevelsClass>(updateLevels, tree.size());
     //do inOrder traversal to create the two arrays - OK
-    tree.InOrder(T(true, &sortTree,stimulantCode,stimulantFactor));
+    tree.InOrder(T(true, &sortTree));
 
     //alternative: added to splay tree a constructor by array.
-    tree = SplayTreeWrapper<Gladiator,T>(sortTree.merge(), tree.size());
+    tree.CreateSplayTreeFromArray(sortTree.merge(), tree.size());
+}
+
+template <class T>
+void GladiatorTree<T>::UpdateLevelsById(StimulantCode stimulantCode, StimulantFactor stimulantFactor){
+       UpdateGladLevel updateGladLevel = UpdateGladLevel(true , NULL, stimulantCode, stimulantFactor);
+    SplitAndSortTree<Gladiator, UpdateGladLevel> sortTree =
+            SplitAndSortTree<Gladiator, UpdateGladLevel>(updateGladLevel, tree.size());
+    tree.InOrder(updateGladLevel);
 }
 
 template <class T>
@@ -285,6 +314,4 @@ template <class T>
 SplayTreeWrapper<Gladiator,T>& GladiatorTree<T>::GetGladiatorsTree(){
     return tree;
 }
-
-
 

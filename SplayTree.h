@@ -55,6 +55,7 @@ public:
     * @param f
     */
     void InOrder(Func f, bool reverse = false);
+    void InOrderP(Func f, bool reverse = false);
     void PreOrder(Func f);
     void PostOrder(Func f);
 
@@ -65,7 +66,7 @@ private:
     T* data;
 
     SplayTree* recConstructor(T** array, int start, int end,
-                                     SplayTree* tree);
+                              SplayTree* tree);
 };
 
 template <class T,class Func>
@@ -139,6 +140,12 @@ public:
 
     virtual ~SplayTreeWrapper(){ delete tree; }
 
+    void CreateSplayTreeFromArray(T** arr, int size){
+        SplayTree<T, Func>* temp = tree;
+        tree = new SplayTree<T, Func>(arr, 0,size -1);
+        delete temp;
+    }
+
     T& getRootData(){ return tree->getRootData(); };
 
     T& Find(T& data){
@@ -168,6 +175,9 @@ public:
         tree->InOrder(f, reverse);
     }
 
+    void InOrderP(Func f, bool reverse = false){
+        tree->InOrderP(f, reverse);
+    }
     void PreOrder(Func f){
         tree->PreOrder(f);
     }
@@ -251,24 +261,18 @@ SplayTree<T, Func>::~SplayTree(){
 
 template <class T,class Func>
 SplayTree<T, Func>::SplayTree(T** array, int start, int end) :
-    data(NULL), left(NULL), right(NULL) {
+        data(NULL), left(NULL), right(NULL) {
     recConstructor(array, start, end, this);
 }
 
 template <class T,class Func>
 SplayTree<T, Func>* SplayTree<T, Func>::recConstructor(T** array, int start, int end,
-                              SplayTree<T, Func>* tree){
+                                                       SplayTree<T, Func>* tree){
     int mid = (start+end)/2;
-    *tree->data = *array[mid];
+    tree->data = new T(*array[mid]);
     tree->left = (start > mid-1) ? NULL : new SplayTree<T, Func>(array, start, mid-1);
     tree->right = (mid+1 > end) ? NULL :new SplayTree<T, Func>(array, mid+1, end);
     return tree;
-}
-
-template <class T,class Func>
-SplayTreeWrapper<T, Func>::SplayTreeWrapper(T** array, int size) :
-        numOfItems(size), tree(NULL){
-    tree = new SplayTree<T, Func>(array, 0, size);
 }
 
 template <class T,class Func>
@@ -323,7 +327,7 @@ void InnerDelete(T& data, SplayTree<T, Func>* root, SplayTreeWrapper<T, Func>& w
             //delete root;
             wrapper.SetTree();
         }
-        //if only the left subTree
+            //if only the left subTree
         else if(right == NULL && left != NULL){
             //delete root;
             *wrapper.GetTree() = *left;
@@ -436,15 +440,29 @@ T* getMaxElement(SplayTree<T, Func>* root){
  * @param f
  */
 template <class T,class Func>
-void SplayTree<T, Func>::InOrder(Func f, bool reverse){
-    if(reverse){
-        if(this->right != NULL) this->right->InOrder(f);
+void SplayTree<T, Func>::InOrder(Func f, bool reverse) {
+    if (reverse) {
+        if (this->right != NULL) this->right->InOrder(f, reverse);
         f(*(this->data));
-        if(this->left != NULL) this->left->InOrder(f);
+        if (this->left != NULL) this->left->InOrder(f, reverse);
+    } else {
+        if (this->left != NULL) this->left->InOrder(f, reverse);
+        f(*(this->data));
+        if (this->right != NULL) this->right->InOrder(f, reverse);
     }
-    if(this->left != NULL) this->left->InOrder(f);
-    f(*(this->data));
-    if(this->right != NULL) this->right->InOrder(f);
+}
+
+template <class T,class Func>
+void SplayTree<T, Func>::InOrderP(Func f, bool reverse) {
+    if (reverse) {
+        if (this->right != NULL) this->right->InOrderP(f, reverse);
+        f((this->data));
+        if (this->left != NULL) this->left->InOrderP(f, reverse);
+    } else {
+        if (this->left != NULL) this->left->InOrderP(f, reverse);
+        f((this->data));
+        if (this->right != NULL) this->right->InOrderP(f, reverse);
+    }
 }
 
 template <class T,class Func>
@@ -462,3 +480,4 @@ void SplayTree<T, Func>::PostOrder(Func f){
 }
 
 #endif //EX1_SPLAYTREE_H
+ 

@@ -14,7 +14,7 @@ public:
         delete[] gladiators;
     }
 
-    GladByLevel(GladByLevel& gladByLevel) : numOfGlads(gladByLevel.numOfGlads),
+    GladByLevel(const GladByLevel& gladByLevel) : numOfGlads(gladByLevel.numOfGlads),
                                             index(gladByLevel.index),
                                             gladiators(NULL)
     {

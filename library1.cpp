@@ -179,26 +179,31 @@ StatusType GetTopGladiator(void *DS, int trainerID, int *gladiatorID){
 StatusType GetAllGladiatorsByLevel(void *DS, int trainerID,
                                    int **gladiators, int *numOfGladiator){
     if(!DS) return INVALID_INPUT;
-    GladByLevel glads;
+    GladByLevel* glads = NULL;
     try {
         glads = ((ComodosDS*)DS)->GetAllGladiatorsByLevel(trainerID);
     }catch (InvalidInputException&){
+        delete glads;
         return INVALID_INPUT;
     }catch (std::bad_alloc&){
+        delete glads;
         return ALLOCATION_ERROR;
     }
     //allocate array for gladiators using malloc.
-    int* temp = (int*)malloc(sizeof(int)*glads.GetNumOfGlads());
+    int* temp = (int*)malloc(sizeof(int)*glads->GetNumOfGlads());
     *gladiators = temp;
     //check for malloc success
-    if(*gladiators == NULL)
+    if(*gladiators == NULL) {
+        delete glads;
         return ALLOCATION_ERROR;
-    //if succeeded update number of gladiators.
-    *numOfGladiator = glads.GetNumOfGlads();
-    //update the gladiators array
-    for(int i=0; i<glads.GetNumOfGlads(); i++){
-        (*gladiators)[i] = glads[i];
     }
+    //if succeeded update number of gladiators.
+    *numOfGladiator = glads->GetNumOfGlads();
+    //update the gladiators array
+    for(int i=0; i<glads->GetNumOfGlads(); i++){
+        (*gladiators)[i] = (*glads)[i];
+    }
+    delete glads;
     return SUCCESS;
 }
 

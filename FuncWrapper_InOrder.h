@@ -4,6 +4,8 @@
 
 #include "SplitAndSortTree.h"
 #include "GladByID.h"
+#include "Trainer.h"
+
 
 class UpdateLevelsClass{
 public:
@@ -39,4 +41,6 @@ private:
     SplitAndSortTree<T, UpdateLevelsClass>* splitAndSortTree;
     GladByLevel* gladByLevel;
 };
+
+
 #endif //EX1_FUNCWRAPPER_INORDER_H

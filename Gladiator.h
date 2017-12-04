@@ -4,7 +4,6 @@
 
 #include "utility.h"
 class Trainer;
-
 class Gladiator {
 
 public:
