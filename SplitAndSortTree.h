@@ -24,7 +24,7 @@ public:
      * @param f - Boolean function for calculation.
      * @param size - size of the tree for array allocation.
      */
-    SplitAndSortTree(BoolFunc f, int size) :
+    SplitAndSortTree(BoolFunc f, int size, StimulantCode=0, StimulantFactor=0) :
             func(f), trueArray(NULL), falseArray(NULL),
             mergedArray(NULL), iTrue(0), iFalse(0), size(size) {
         trueArray = new T*[size];
@@ -47,8 +47,8 @@ public:
      * @param data
      */
     void operator()(T& data){
-        if(func(data)) trueArray[iTrue++] = *data;
-        else falseArray[iFalse++] = *data;
+        if(func(data)) trueArray[iTrue++] = &data;
+        else falseArray[iFalse++] = &data;
     }
 
     /**

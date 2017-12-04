@@ -188,7 +188,8 @@ StatusType GetAllGladiatorsByLevel(void *DS, int trainerID,
         return ALLOCATION_ERROR;
     }
     //allocate array for gladiators using malloc.
-    *gladiators = (int*)malloc(sizeof(int)*glads.GetNumOfGlads());
+    int* temp = (int*)malloc(sizeof(int)*glads.GetNumOfGlads());
+    *gladiators = temp;
     //check for malloc success
     if(*gladiators == NULL)
         return ALLOCATION_ERROR;
@@ -196,7 +197,7 @@ StatusType GetAllGladiatorsByLevel(void *DS, int trainerID,
     *numOfGladiator = glads.GetNumOfGlads();
     //update the gladiators array
     for(int i=0; i<glads.GetNumOfGlads(); i++){
-        *gladiators[i] = glads[i];
+        (*gladiators)[i] = glads[i];
     }
     return SUCCESS;
 }

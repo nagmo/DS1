@@ -54,7 +54,7 @@ private:
 
 class UpdateGladLevel{
 public:
-    UpdateGladLevel(StimulantCode stimulantCode, StimulantFactor stimulantFactor):
+    UpdateGladLevel( bool,void*,StimulantCode stimulantCode, StimulantFactor stimulantFactor):
             stimulantCode(stimulantCode), stimulantFactor(stimulantFactor){};
     void operator()(Gladiator& glad){
         if(glad.GetGladiatorID() % stimulantCode == 0)

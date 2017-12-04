@@ -8,6 +8,7 @@
 #include "ComodosDS.h"
 #include "FuncWrapper_InOrder.h"
 
+template <class T>
 class GladiatorTree;
 
 class Trainer {
@@ -43,7 +44,7 @@ public:
     * return gladiators tree
     * @return
     */
-    GladiatorTree* GetGladiatorsTree();
+    GladiatorTree<FuncWrapper_InOrder<Gladiator> >* GetGladiatorsTree();
 
     /**
     * return trainer's id
@@ -67,7 +68,7 @@ private:
 
     TrainerID id;
     Gladiator bestGladiator;
-    GladiatorTree<FuncWrapper_InOrder>* gladiators;
+    GladiatorTree<FuncWrapper_InOrder<Gladiator> >* gladiators;
 
 };
 

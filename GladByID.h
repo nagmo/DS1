@@ -8,8 +8,20 @@
 class GladByLevel{
 public:
 
+    GladByLevel() : numOfGlads(0),index(0),gladiators(NULL){};
+
     ~GladByLevel(){
         delete[] gladiators;
+    }
+
+    GladByLevel(GladByLevel& gladByLevel) : numOfGlads(gladByLevel.numOfGlads),
+                                            index(gladByLevel.index),
+                                            gladiators(NULL)
+    {
+        gladiators = new int[numOfGlads];
+        for(int i=0;i<numOfGlads;i++){
+            gladiators[i] = gladByLevel.gladiators[i];
+        }
     }
 
     void operator()(Gladiator& gladiator){

@@ -8,7 +8,7 @@
  */
 ComodosDS::ComodosDS() : trainers(TrainerTree()),
                          gladiators(GladiatorTree<UpdateGladLevel>()),
-                         gladiatorsByLevel(GladiatorTree<FuncWrapper_InOrder>()){
+                         gladiatorsByLevel(GladiatorTree<FuncWrapper_InOrder<Gladiator> >()){
 }
 
 /**
@@ -177,19 +177,19 @@ GladiatorID ComodosDS::GetTopGladiator(TrainerID trainerID){
 
 GladByLevel ComodosDS::GetAllGladiatorsByLevel(TrainerID trainerID){
     if(trainerID == 0) throw InvalidInputException();
-    GladByLevel gladByLevel = GladByLevel();
+    GladByLevel gladByLevel;
     //get all glads
     if(trainerID<0){
         gladByLevel.SetNumOfGlads(this->gladiatorsByLevel.GetGladiatorsTree().size());
-        this->gladiatorsByLevel.GetGladiatorsTree().InOrder(FuncWrapper_InOrder(false, &gladByLevel), true);
+        this->gladiatorsByLevel.GetGladiatorsTree().InOrder(FuncWrapper_InOrder<Gladiator>(false, &gladByLevel), true);
         return gladByLevel;
     }
     //get by trainer
     Trainer tempTrainer = Trainer(trainerID);
     try{
-        Trainer currTrainer = trainers.Find(tempTrainer);
+        Trainer& currTrainer = trainers.Find(tempTrainer);
         gladByLevel.SetNumOfGlads(currTrainer.GetGladiatorsTree()->GetGladiatorsTree().size());
-        currTrainer.GetGladiatorsTree()->GetGladiatorsTree().InOrder(FuncWrapper_InOrder(false, &gladByLevel), true);
+        currTrainer.GetGladiatorsTree()->GetGladiatorsTree().InOrder(FuncWrapper_InOrder<Gladiator>(false, &gladByLevel), true);
         return gladByLevel;
     }catch (TreeElementNotInTreeException&){
         throw FailureException();
@@ -238,24 +238,9 @@ void ComodosDS::UpdateLevels(StimulantCode stimulantCode, StimulantFactor stimul
 
 
 }
-class UpdateLevelsClass{
-public:
-    UpdateLevelsClass(StimulantCode code, StimulantFactor factor) : stimulantCode(code),
-    stimulantFactor(factor){};
-    bool operator()(Gladiator& gladiator){
-        if(gladiator.GetGladiatorID()%stimulantCode == 0) {
-            gladiator.MultiplyLevel(stimulantFactor);
-            return true;
-        }
-        return false;
-    };
-private:
-    StimulantCode stimulantCode;
-    StimulantFactor stimulantFactor;
-};
 
 template <class T>
-void GladiatorTree::UpdateLevels(StimulantCode stimulantCode, StimulantFactor stimulantFactor){
+void GladiatorTree<T>::UpdateLevels(StimulantCode stimulantCode, StimulantFactor stimulantFactor){
     //creating the function class
     UpdateLevelsClass updateLevels = UpdateLevelsClass(stimulantCode, stimulantFactor);
 
@@ -263,22 +248,22 @@ void GladiatorTree::UpdateLevels(StimulantCode stimulantCode, StimulantFactor st
     SplitAndSortTree<Gladiator,UpdateLevelsClass> sortTree =
             SplitAndSortTree<Gladiator,UpdateLevelsClass>(updateLevels, tree.size());
     //do inOrder traversal to create the two arrays - OK
-    tree.InOrder(FuncWrapper_InOrder(true, &sortTree));
+    tree.InOrder(T(true, &sortTree,stimulantCode,stimulantFactor));
 
     //alternative: added to splay tree a constructor by array.
     tree = SplayTreeWrapper<Gladiator,T>(sortTree.merge(), tree.size());
 }
 
 template <class T>
-GladiatorTree::GladiatorTree() : tree(SplayTreeWrapper<Gladiator,T>()), bestGladiator(Gladiator(-1)){}
+GladiatorTree<T>::GladiatorTree() : tree(SplayTreeWrapper<Gladiator,T>()), bestGladiator(Gladiator(-1)){}
 
 template <class T>
-void GladiatorTree::UpdateBestGladiator(Gladiator& gladiator){
+void GladiatorTree<T>::UpdateBestGladiator(Gladiator& gladiator){
     bestGladiator = Gladiator(gladiator);
 }
 
 template <class T>
-void GladiatorTree::AddGladiator(Gladiator& gladiator) {
+void GladiatorTree<T>::AddGladiator(Gladiator& gladiator) {
     tree.Insert(gladiator);
     //if is better
     if(gladiator.GetLevel() > bestGladiator.GetLevel() || (gladiator.GetLevel() == bestGladiator.GetLevel() &&
@@ -288,7 +273,7 @@ void GladiatorTree::AddGladiator(Gladiator& gladiator) {
 }
 
 template <class T>
-void GladiatorTree::DeleteGladiator(Gladiator& gladiator){
+void GladiatorTree<T>::DeleteGladiator(Gladiator& gladiator){
     tree.Delete(gladiator);
     if(gladiator.GetGladiatorID() == bestGladiator.GetGladiatorID()){
         Gladiator* newBest = tree.GetMaxElement();
@@ -297,7 +282,7 @@ void GladiatorTree::DeleteGladiator(Gladiator& gladiator){
 }
 
 template <class T>
-SplayTreeWrapper<Gladiator,T>& GladiatorTree::GetGladiatorsTree(){
+SplayTreeWrapper<Gladiator,T>& GladiatorTree<T>::GetGladiatorsTree(){
     return tree;
 }
 

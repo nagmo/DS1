@@ -104,7 +104,7 @@ private:
 
     TrainerTree trainers;
     GladiatorTree<UpdateGladLevel> gladiators;
-    GladiatorTree<FuncWrapper_InOrder> gladiatorsByLevel;
+    GladiatorTree<FuncWrapper_InOrder<Gladiator> > gladiatorsByLevel;
 };
 
 
