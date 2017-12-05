@@ -15,7 +15,7 @@ public:
     }
 
     GladByLevel(const GladByLevel& gladByLevel) : numOfGlads(gladByLevel.numOfGlads),
-                                            , gladiators(NULL), index(gladByLevel.index)
+                                             gladiators(NULL), index(gladByLevel.index)
     {
         gladiators = new int[numOfGlads];
         for(int i=0;i<numOfGlads;i++){

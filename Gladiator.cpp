@@ -1,11 +1,11 @@
 
 #include "Gladiator.h"
 Gladiator::Gladiator(GladiatorID gladiatorID, Trainer* trainer,  Level level, bool subOrderFlag) :
-        id(gladiatorID), level(level), trainer(trainer), subOrderFlag(subOrderFlag) {}
+        subOrderFlag(subOrderFlag), id(gladiatorID), level(level), trainer(trainer) {}
 
 Gladiator::Gladiator(const Gladiator& gladiator) :
-        id(gladiator.id), trainer(gladiator.trainer),
-        level(gladiator.level), subOrderFlag(gladiator.subOrderFlag) {}
+        subOrderFlag(gladiator.subOrderFlag) , id(gladiator.id), level(gladiator.level),
+        trainer(gladiator.trainer){}
 
 Level Gladiator::GetLevel(){
     return level;
