@@ -15,7 +15,7 @@ template <class T>
 class GladiatorTree{
 public:
     GladiatorTree();
-    void UpdateBestGladiator(Gladiator&);
+    void UpdateBestGladiator();
     void AddGladiator(Gladiator&);
     void DeleteGladiator(Gladiator&);
     SplayTreeWrapper<Gladiator,T>& GetGladiatorsTree();

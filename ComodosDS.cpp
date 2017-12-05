@@ -258,6 +258,7 @@ public:
         if(trainer->GetGladiatorsTree()->IsNull())
             return;
         trainer->GetGladiatorsTree()->UpdateLevels(stimulantCode, stimulantFactor);
+        trainer->GetGladiatorsTree()->UpdateBestGladiator();
     }
 
 private:
@@ -274,6 +275,7 @@ void ComodosDS::UpdateLevels(StimulantCode stimulantCode, StimulantFactor stimul
     if(gladiators.IsNull()) return;
     gladiators.UpdateLevelsById(stimulantCode, stimulantFactor);
     gladiatorsByLevel.UpdateLevels(stimulantCode, stimulantFactor);
+    gladiatorsByLevel.UpdateBestGladiator();
     trainers.InOrder(stimulantCode, stimulantFactor);
 }
 
@@ -304,16 +306,16 @@ template <class T>
 GladiatorTree<T>::GladiatorTree() : tree(SplayTreeWrapper<Gladiator,T>()), bestGladiator(Gladiator(-1)){}
 
 template <class T>
-void GladiatorTree<T>::UpdateBestGladiator(Gladiator& gladiator){
-    bestGladiator = Gladiator(gladiator);
+void GladiatorTree<T>::UpdateBestGladiator(){
+    Gladiator* temp = tree.GetMaxElement();
+    bestGladiator = (temp == NULL) ? Gladiator(-1) : Gladiator(*temp);
 }
 
 template <class T>
 void GladiatorTree<T>::AddGladiator(Gladiator& gladiator) {
     tree.Insert(gladiator);
     //if is better
-    if(gladiator.GetLevel() > bestGladiator.GetLevel() || (gladiator.GetLevel() == bestGladiator.GetLevel() &&
-            gladiator.GetGladiatorID() < bestGladiator.GetGladiatorID())){
+    if(gladiator > bestGladiator){
         bestGladiator = Gladiator(gladiator);
     }
 }
