@@ -22,6 +22,7 @@ public:
     void UpdateLevels(StimulantCode, StimulantFactor);
     void UpdateLevelsById(StimulantCode, StimulantFactor);
     bool IsNull(){ return tree.GetTree() == NULL;}
+    GladiatorID GetBestGladiatorId(){ return bestGladiator.GetGladiatorID();}
 private:
     SplayTreeWrapper<Gladiator,T> tree;
     Gladiator bestGladiator;

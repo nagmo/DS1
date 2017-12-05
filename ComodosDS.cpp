@@ -162,7 +162,7 @@ GladiatorID ComodosDS::GetTopGladiator(TrainerID trainerID){
     if(trainerID == 0) throw InvalidInputException();
     if(gladiatorsByLevel.IsNull()) return -1;
     if(trainerID < 0){
-        return gladiatorsByLevel.GetGladiatorsTree().GetMaxElement()->GetGladiatorID();
+        return gladiatorsByLevel.GetBestGladiatorId();
     }
     //search for trainer
     //create an instant of a trainer
