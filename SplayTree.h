@@ -288,7 +288,7 @@ T* SplayTree<T, Func>::getRootDataPointer() {
 template <class T,class Func>
 T& InnerFind(T& data, SplayTree<T, Func>** root){
     *root = Splay(data, *root);
-    if((*root)->getRootData() == data){
+    if(*root && (*root)->getRootData() == data){
         return (*root)->getRootData();
     }else{
         throw TreeElementNotInTreeException();
@@ -336,7 +336,7 @@ void InnerDelete(T& data, SplayTree<T, Func>* root, SplayTreeWrapper<T, Func>& w
             //delete root;
             wrapper.SetTree(right);
         } else{
-            *wrapper.GetTree() = *(Splay(*maxElementInLeft, root->GetLeft()));
+            wrapper.SetTree(Splay(*maxElementInLeft, root->GetLeft()));
             wrapper.GetTree()->SetRight(right);
         }
         //root->SetLeft(Splay(*maxElementInLeft, root->GetLeft()));
