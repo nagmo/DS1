@@ -160,6 +160,8 @@ StatusType GetTopGladiator(void *DS, int trainerID, int *gladiatorID){
         return INVALID_INPUT;
     }catch (std::bad_alloc&){
         return ALLOCATION_ERROR;
+    }catch (FailureException&){
+        return FAILURE;
     }
     *gladiatorID = id;
     return SUCCESS;
@@ -188,6 +190,8 @@ StatusType GetAllGladiatorsByLevel(void *DS, int trainerID,
     }catch (std::bad_alloc&){
         delete glads;
         return ALLOCATION_ERROR;
+    }catch(FailureException&){
+        return FAILURE;
     }
     //allocate array for gladiators using malloc.
     int* temp = (int*)malloc(sizeof(int)*glads->GetNumOfGlads());

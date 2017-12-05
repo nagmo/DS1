@@ -330,11 +330,11 @@ void InnerDelete(T& data, SplayTree<T, Func>* root, SplayTreeWrapper<T, Func>& w
             //if only the left subTree
         else if(right == NULL && left != NULL){
             //delete root;
-            *wrapper.GetTree() = *left;
+            wrapper.SetTree(left);
             //if only right subTree
         } else if(left == NULL && right != NULL){
             //delete root;
-            *wrapper.GetTree() = *right;
+            wrapper.SetTree(right);
         } else{
             *wrapper.GetTree() = *(Splay(*maxElementInLeft, root->GetLeft()));
             wrapper.GetTree()->SetRight(right);
@@ -380,7 +380,7 @@ SplayTree<T, Func>* Splay(T& itemToFind, SplayTree<T, Func>* root){
         if(root->GetRight()->getRootData() > itemToFind){ ///right->left
             root->GetRight()->SetLeft(Splay(itemToFind, root->GetRight()->GetLeft()));
             if(root->GetRight()->GetLeft() != NULL){
-                root->SetRight(RotateLeft(root->GetRight()));
+                root->SetRight(RotateRight(root->GetRight()));
             }
         } else if(root->GetRight()->getRootData() < itemToFind){ ///right->right
             root->GetRight()->SetRight(Splay(itemToFind, root->GetRight()->GetRight()));

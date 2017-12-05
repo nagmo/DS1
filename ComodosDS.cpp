@@ -46,6 +46,8 @@ void ComodosDS:: BuyGladiator(GladiatorID gladID, TrainerID trainID, Level level
     if(gladID <= 0 || trainID <= 0 || level <= 0) throw InvalidInputException();
     //check if trainer exists
     Trainer tempTrainer = Trainer(trainID, false);
+    //check if glad exists.
+
     //find the trainer
     //if doesnt exist, would throw FailureException, remove gladiator from glad tree
     try{
@@ -238,6 +240,8 @@ void ComodosDS::UpgradeGladiator(GladiatorID currGladID, GladiatorID newGladID){
     }
     catch (TreeElementNotInTreeException&){
         throw InvalidInputException();
+    }catch (TreeElementAllreadyInTreeException&){
+        throw FailureException();
     }
 
 }
