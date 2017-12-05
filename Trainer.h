@@ -34,13 +34,6 @@ public:
     void AddGladiator(Gladiator&);
 
     /**
-    * return best gladiator
-    * @return
-    */
-    Gladiator& GetBestGladiator();
-
-    void SetBestGladiator();
-    /**
     * return gladiators tree
     * @return
     */
@@ -67,7 +60,6 @@ public:
 private:
 
     TrainerID id;
-    Gladiator bestGladiator;
     GladiatorTree<FuncWrapper_InOrder<Gladiator> >* gladiators;
 
 };

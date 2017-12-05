@@ -8,7 +8,7 @@
  * @param id
  */
 Trainer::Trainer(TrainerID id, bool withGladTree) :
-        id(id), bestGladiator(Gladiator(DUMMY, NULL, DUMMY)){
+        id(id){
     if(withGladTree) gladiators = new GladiatorTree<FuncWrapper_InOrder<Gladiator> >();
     else gladiators = NULL;
 }
@@ -16,7 +16,7 @@ Trainer::Trainer(TrainerID id, bool withGladTree) :
  * copy constructor, use only for a new trainer (without glads tree)
  * @param t
  */
-Trainer::Trainer(const Trainer& t) : id(t.id), bestGladiator(t.bestGladiator){
+Trainer::Trainer(const Trainer& t) : id(t.id){
     gladiators = new GladiatorTree<FuncWrapper_InOrder<Gladiator> >();
 }
 
@@ -31,23 +31,8 @@ Trainer::~Trainer(){
  */
 void Trainer::AddGladiator(Gladiator &newGladiator) {
     gladiators->AddGladiator(newGladiator);
-    if(newGladiator.GetLevel() > bestGladiator.GetLevel()){
-        bestGladiator = Gladiator(newGladiator);
-    }
 }
 
-/**
- * return best gladiator
- * @return
- */
-Gladiator& Trainer::GetBestGladiator() {
-    return bestGladiator;
-}
-
-void Trainer::SetBestGladiator(){
-    Gladiator* newBestGladiator = gladiators->GetGladiatorsTree().GetMaxElement();
-    bestGladiator = (newBestGladiator == NULL) ? Gladiator(-1) : Gladiator(*newBestGladiator);
-}
 /**
  * return gladiators tree
  * @return

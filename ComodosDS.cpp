@@ -117,10 +117,6 @@ void ComodosDS::FreeGladiator(GladiatorID gladID){
         }
         //remove gladiator from trainer
         currTrainer->GetGladiatorsTree()->DeleteGladiator(tempGlad);
-        //update best glad of trainer
-        if(currTrainer->GetBestGladiator().GetGladiatorID() == gladID){
-            currTrainer->SetBestGladiator();
-        }
     }
     catch (TreeElementNotInTreeException&){
         throw FailureException();
@@ -171,7 +167,7 @@ GladiatorID ComodosDS::GetTopGladiator(TrainerID trainerID){
     try{
         //if not found, should throw exception
         Trainer& currTrainer = trainers.Find(tempTrainer);
-        return currTrainer.GetBestGladiator().GetGladiatorID();
+        return currTrainer.GetGladiatorsTree()->GetBestGladiatorId();
     }
     catch (TreeElementNotInTreeException&){
         throw FailureException();
