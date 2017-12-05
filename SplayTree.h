@@ -261,7 +261,7 @@ SplayTree<T, Func>::~SplayTree(){
 
 template <class T,class Func>
 SplayTree<T, Func>::SplayTree(T** array, int start, int end) :
-        data(NULL), left(NULL), right(NULL) {
+        left(NULL), right(NULL), data(NULL) {
     recConstructor(array, start, end, this);
 }
 
@@ -320,6 +320,7 @@ void InnerDelete(T& data, SplayTree<T, Func>* root, SplayTreeWrapper<T, Func>& w
     root = Splay(data, root);
     if(root->getRootData() == data){
         delete root->getRootDataPointer();
+        SplayTree<T, Func>* rootPointer = root;
         T* maxElementInLeft = getMaxElement(root->GetLeft());
         SplayTree<T, Func>* right = root->GetRight();
         SplayTree<T, Func>* left = root->GetLeft();
@@ -340,8 +341,9 @@ void InnerDelete(T& data, SplayTree<T, Func>* root, SplayTreeWrapper<T, Func>& w
             wrapper.SetTree(temp);
             wrapper.GetTree()->SetRight(right);
         }
-        //root->SetLeft(Splay(*maxElementInLeft, root->GetLeft()));
-        //root->SetRight(right);
+        rootPointer->SetLeft();
+        rootPointer->SetRight();
+        delete rootPointer;
     }else
         throw TreeElementNotInTreeException();
 }
