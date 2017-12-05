@@ -36,7 +36,7 @@ bool Gladiator::operator==(Gladiator& gladiator){
  */
 bool Gladiator::operator<(Gladiator& gladiator){
     if(subOrderFlag){
-        return level < gladiator.level;
+        return (level == gladiator.level) ? (id > gladiator.id) : (level < gladiator.level);
     }
     return id < gladiator.id;
 }
@@ -46,7 +46,7 @@ bool Gladiator::operator<(Gladiator& gladiator){
  * @return
  */
 bool Gladiator::operator>(Gladiator& gladiator){
-    return !(*this < gladiator || *this == gladiator);
+    return (!(*this < gladiator) && !(*this == gladiator));
 }
 
 void Gladiator::SetFlag(bool flag) {

@@ -218,6 +218,13 @@ void ComodosDS::UpgradeGladiator(GladiatorID currGladID, GladiatorID newGladID){
     //find the glad, delete it from the tree, update its ID and add it to the tree
     Gladiator tempGlad = Gladiator(currGladID);
     try{
+        Gladiator testGlad = Gladiator(newGladID);
+        try{
+            gladiators.GetGladiatorsTree().Find(testGlad);
+            throw FailureException();
+        }
+        catch (TreeElementNotInTreeException&){}
+
         Gladiator currGlad = gladiators.GetGladiatorsTree().Find(tempGlad);
 
         //creating the new gladiator
