@@ -319,7 +319,6 @@ template <class T,class Func>
 void InnerDelete(T& data, SplayTree<T, Func>* root, SplayTreeWrapper<T, Func>& wrapper){
     root = Splay(data, root);
     if(root->getRootData() == data){
-        delete root->getRootDataPointer();
         SplayTree<T, Func>* rootPointer = root;
         T* maxElementInLeft = getMaxElement(root->GetLeft());
         SplayTree<T, Func>* right = root->GetRight();

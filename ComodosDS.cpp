@@ -192,6 +192,7 @@ GladByLevel* ComodosDS::GetAllGladiatorsByLevel(TrainerID trainerID){
     try{
         Trainer& currTrainer = trainers.Find(tempTrainer);
         if(currTrainer.GetGladiatorsTree()->IsNull()){
+            delete gladByLevel;
             GladByLevel* glad = new GladByLevel();
             return glad;
         }

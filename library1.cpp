@@ -185,12 +185,13 @@ StatusType GetAllGladiatorsByLevel(void *DS, int trainerID,
     try {
         glads = ((ComodosDS*)DS)->GetAllGladiatorsByLevel(trainerID);
     }catch (InvalidInputException&){
-        delete glads;
+        //not allocated yet
         return INVALID_INPUT;
     }catch (std::bad_alloc&){
-        delete glads;
+        if( glads != NULL) delete glads;
         return ALLOCATION_ERROR;
     }catch(FailureException&){
+        delete glads;
         return FAILURE;
     }
     //allocate array for gladiators using malloc.
