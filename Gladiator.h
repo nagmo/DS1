@@ -61,8 +61,8 @@ public:
     }
 
 private:
-    StimulantFactor stimulantFactor;
     StimulantCode stimulantCode;
+    StimulantFactor stimulantFactor;
 };
 
 

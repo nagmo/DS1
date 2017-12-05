@@ -136,7 +136,7 @@ class SplayTreeWrapper{
 
 public:
 
-    SplayTreeWrapper() : numOfItems(0), tree(NULL) { }
+    SplayTreeWrapper() : tree(NULL),  numOfItems(0) { }
 
     virtual ~SplayTreeWrapper(){ delete tree; }
 

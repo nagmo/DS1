@@ -8,15 +8,14 @@
 class GladByLevel{
 public:
 
-    GladByLevel() : numOfGlads(0),index(0),gladiators(NULL){};
+    GladByLevel() : numOfGlads(0),gladiators(NULL) ,index(0){};
 
     ~GladByLevel(){
         delete[] gladiators;
     }
 
     GladByLevel(const GladByLevel& gladByLevel) : numOfGlads(gladByLevel.numOfGlads),
-                                            index(gladByLevel.index),
-                                            gladiators(NULL)
+                                            , gladiators(NULL), index(gladByLevel.index)
     {
         gladiators = new int[numOfGlads];
         for(int i=0;i<numOfGlads;i++){

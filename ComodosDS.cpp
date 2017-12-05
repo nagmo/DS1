@@ -262,8 +262,8 @@ public:
     }
 
 private:
-    StimulantFactor stimulantFactor;
     StimulantCode stimulantCode;
+    StimulantFactor stimulantFactor;
 };
 
 void TrainerTree::InOrder(StimulantCode code, StimulantFactor factor){
