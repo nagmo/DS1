@@ -200,6 +200,7 @@ GladByLevel* ComodosDS::GetAllGladiatorsByLevel(TrainerID trainerID){
         currTrainer.GetGladiatorsTree()->GetGladiatorsTree().InOrder(FuncWrapper_InOrder<Gladiator>(false, gladByLevel), true);
         return gladByLevel;
     }catch (TreeElementNotInTreeException&){
+        delete gladByLevel;
         throw FailureException();
     }
 }
